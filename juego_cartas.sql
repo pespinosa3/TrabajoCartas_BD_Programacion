@@ -189,9 +189,9 @@ VALUES
 ('Dagas de Sombra', 'Ataques rápidos.', 15, 1.30, 0.25, 1.90, 6),
 ('Rayban', 'Te deslumbra', 20, 1.4, 0.14, 1.67, 7),
 ('Bastón Glacial', 'Congela el entorno.', 22, 1.10, 0.16, 1.75, 8),
-('Karambit del Viento', 'Velocidad extrema.', 17, 1.25, 0.22, 1.80, 9),
+('Karambit del Viento', 'Spin to win', 17, 1.25, 0.22, 1.80, 9),
 ('Ballesta Arcana', 'Proyectiles precisos.', 28, 1.15, 0.19, 1.70, 10),
-('M4A4 Silenciada', 'Con tres cargadores.', 28, 1.15, 0.19, 1.70, 11),
+('M4A4 Silenciada', 'Con tres cargadores.', 50, 1.8, 0.34, 3, 11),
 ('Guadaña Infernal', 'Fuego del inframundo.', 35, 1.20, 0.14, 1.85, 12);
 
 -- CAMBIA NOMBRE DE LAS TABLAS DE RELACION PARA QUITARLE EL REL!!!!!!!!
@@ -255,5 +255,17 @@ SELECT daño_basico_especifico('Eco Nulo') AS daño_basico;
     (a.daño_base * p.multiplicador_ataque * ar.multiplicador_daño + ar.daño_extra) * ar.multiplicador_critico AS daño_critico,
     
     ar.prob_critico*/
+
+
+SELECT AVG(prob_critico)
+    FROM armas;
+
+-- selecciona la probabilidad de critico de un ataque
+SELECT nombre_arma, 100*(prob_critico) AS porcentaje_critico
+FROM armas
+WHERE prob_critico > (
+	SELECT AVG(prob_critico)
+    FROM armas
+);
 
 
