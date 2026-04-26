@@ -193,3 +193,67 @@ VALUES
 ('Ballesta Arcana', 'Proyectiles precisos.', 28, 1.15, 0.19, 1.70, 10),
 ('M4A4 Silenciada', 'Con tres cargadores.', 28, 1.15, 0.19, 1.70, 11),
 ('Guadaña Infernal', 'Fuego del inframundo.', 35, 1.20, 0.14, 1.85, 12);
+
+-- CAMBIA NOMBRE DE LAS TABLAS DE RELACION PARA QUITARLE EL REL!!!!!!!!
+ALTER TABLE rel_ataque_personaje RENAME ataque_personaje;
+ALTER TABLE rel_ataque_elemento RENAME ataque_elemento;
+
+
+-- calcula el daño basico del ataque combinado con los multiplicadores de ataque del personaje y del arma
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS daño_basico_tabla //
+CREATE PROCEDURE daño_basico_tabla()
+BEGIN
+SELECT 
+	a.nombre AS ataque,
+    p.nombre AS personaje,
+    ar.nombre_arma AS arma,
+    
+    -- daño base con personaje y arma
+    (a.daño_base * p.multiplicador_ataque * ar.multiplicador_daño + ar.daño_extra) AS daño_basico
+    
+FROM ataques a
+JOIN ataque_personaje ap ON a.id_ataque = ap.id_ataque
+JOIN personajes p ON p.id_personaje = ap.id_personaje
+JOIN armas ar ON p.id_personaje = ar.id_personaje;
+END //
+DELIMITER ;
+
+CALL daño_basico_tabla();
+
+
+
+DELIMITER //
+
+DROP FUNCTION IF EXISTS daño_basico_especifico //
+CREATE FUNCTION daño_basico_especifico(p_nombre VARCHAR(50))
+RETURNS DECIMAL(10,2)
+BEGIN
+DECLARE calculo DECIMAL(10,2);
+SELECT
+-- daño base con personaje y arma
+(a.daño_base * p.multiplicador_ataque * ar.multiplicador_daño + ar.daño_extra) AS daño_basico
+INTO calculo
+FROM ataques a
+JOIN ataque_personaje ap ON a.id_ataque = ap.id_ataque
+JOIN personajes p ON p.id_personaje = ap.id_personaje
+JOIN armas ar ON p.id_personaje = ar.id_personaje
+WHERE a.nombre=p_nombre;
+
+RETURN calculo;
+END //
+DELIMITER ;
+
+SELECT daño_basico_especifico('Eco Nulo') AS daño_basico;
+
+
+-- para el buscador general, crear una funcion que devuelva los nombres de los ataques concatenados
+
+
+/*-- daño crítico
+    (a.daño_base * p.multiplicador_ataque * ar.multiplicador_daño + ar.daño_extra) * ar.multiplicador_critico AS daño_critico,
+    
+    ar.prob_critico*/
+
+
