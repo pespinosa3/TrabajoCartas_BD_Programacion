@@ -3,7 +3,7 @@ CREATE DATABASE Juego_cartas;
 USE Juego_cartas;
 
 -- ==========================================
--- 1. ESTADOS (Limpia)
+-- 1. ESTADOS
 -- ==========================================
 CREATE TABLE estados (
     id_estado INT AUTO_INCREMENT PRIMARY KEY,
@@ -11,10 +11,10 @@ CREATE TABLE estados (
 );
 
 INSERT INTO estados (nombre_estado) VALUES
-('Depresión'), ('Parálisis'), ('Quemado'), ('Envenenado'), ('Cristalizado'), ('Mojado'), ('Moderado');
+('Depresión'), ('Parálisis'), ('Quemado'), ('Veneno'), ('Cristalizado'), ('Mojado'), ('Moderado');
 
 -- ==========================================
--- 2. ELEMENTOS (Relación directa con Estado)
+-- 2. ELEMENTOS
 -- ==========================================
 CREATE TABLE elementos (
     id_elemento INT AUTO_INCREMENT PRIMARY KEY,
@@ -25,40 +25,69 @@ CREATE TABLE elementos (
 );
 
 INSERT INTO elementos (nombre, descripcion, id_estado) VALUES
-('Vacío', 'Ausencia de materia.', 1),
-('Electricidad', 'Conducción de corriente', 2),
-('Solar', 'Energía solar canalizada', 3),
-('Planta', 'Fostosintesis', 4),
-('Mineral', 'Gigalith pre-evolución', 5),
-('Líquido', 'Fluidos varios', 6),
-('Admin', 'Más vale que sigas las reglas', 7);
+('vacío', 'Ausencia de materia.', 1),
+('electricidad', 'Energía eléctrica.', 2),
+('solar', 'Energía del sol.', 3),
+('planta', 'Naturaleza viva.', 4),
+('mineral', 'Roca y tierra.', 5),
+('líquido', 'Fluidos.', 6),
+('admin', 'más vale que siga las reglas', 7);
 
--- ==========================================
--- 3. PERSONAJES (Limpia)
--- ==========================================
+-- 1. Creamos la tabla de Casas primero
+CREATE TABLE casas (
+    id_casa INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    emblema VARCHAR(50),
+    id_comandante INT, -- Aquí guardaremos el ID del capitán
+    grito_de_guerra VARCHAR(100)
+);
+
+-- 2. Insertamos las casas (dejamos el ID de comandante listo)
+INSERT INTO casas (nombre, emblema, id_comandante, grito_de_guerra) VALUES
+('Legión Administrativa', 'Martillo Dorado', 11, '¡Baneo o Justicia!'), -- Pablo
+('Orden del Caos', 'Guadaña Sombría', 12, '¡El hilo se corta aquí!'),      -- Jaime
+('Canes del Rayo', 'Collar de Oro', 2, '¡Guau guau y trueno!'),           -- Bolt
+('Marea Eterna', 'Tridente de Algas', 4, '¡Glup, la naturaleza manda!');  -- Hydra
+
+-- 3. Creamos la tabla Personajes con sus relaciones
 CREATE TABLE personajes (
     id_personaje INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     vida INT,
-    multiplicador_ataque DECIMAL(3,2)
+    multiplicador_ataque DECIMAL(3,2),
+    id_casa INT,
+    id_comandante INT, -- Relación reflexiva
+    FOREIGN KEY (id_casa) REFERENCES casas(id_casa),
+    FOREIGN KEY (id_comandante) REFERENCES personajes(id_personaje)
 );
 
-INSERT INTO personajes (nombre, vida, multiplicador_ataque) VALUES
-('Aeris', 900, 1.2),
-('Bolt el perro ese', 700, 1.4),
-('Terrax', 1400, 0.85),
-('Hydra', 1100, 1),
-('Flora', 800, 1.3),
-('Umbra', 600, 1.5),
-('Ignis', 950, 1.15),
-('Glacius', 1200, 0.95),
-('Zephyr', 750, 1.35),
-('Noctis', 650, 1.45),
-('Pablo', 500, 2),
-('Jaime', 5000, 1);
+-- 4. Insertamos los personajes. 
+-- IMPORTANTE: Insertamos primero a los capitanes para evitar el error 1452 al asignar comandantes.
+INSERT INTO personajes (id_personaje, nombre, vida, multiplicador_ataque, id_casa, id_comandante) VALUES
+-- CAPITANES (Comandante en NULL)
+(11, 'Pablo', 500, 2.00, 1, NULL),
+(12, 'Jaime', 5000, 1.00, 2, NULL),
+(2, 'Bolt el perro ese', 700, 1.40, 3, NULL),
+(4, 'Hydra', 1100, 1.00, 4, NULL),
+
+-- SOLDADOS CASA 1 (Pablo)
+(1, 'Aeris', 900, 1.20, 1, 11),
+(3, 'Terrax', 1400, 0.85, 1, 11),
+
+-- SOLDADOS CASA 2 (Jaime)
+(5, 'Flora', 800, 1.30, 2, 12),
+(6, 'Umbra', 600, 1.50, 2, 12),
+
+-- SOLDADOS CASA 3 (Bolt)
+(7, 'Ignis', 950, 1.15, 3, 2),
+(8, 'Santa Claus', 1200, 0.95, 3, 2),
+
+-- SOLDADOS CASA 4 (Hydra)
+(9, 'Pikacho', 750, 1.35, 4, 4),
+(10, 'Dementor', 650, 1.45, 4, 4);
 
 -- ==========================================
--- 4. ATAQUES (SOLO SU PRIMARY KEY Y DATOS)
+-- 6. ATAQUES (Limpia)
 -- ==========================================
 CREATE TABLE ataques (
     id_ataque INT AUTO_INCREMENT PRIMARY KEY,
@@ -108,10 +137,8 @@ INSERT INTO ataques (nombre, descripcion, potencia, daño_base, coste_mana) VALU
 ('Decapitar', 'Se acabó', 'potente', 300, 12);
 
 -- ==========================================
--- 5. TABLAS RELACIONALES (PARA LOS ATAQUES)
+-- 7. TABLAS RELACIONALES (ATAQUES)
 -- ==========================================
-
--- Relaciona cada ataque con su personaje
 CREATE TABLE rel_ataque_personaje (
     id_ataque INT PRIMARY KEY,
     id_personaje INT,
@@ -124,7 +151,6 @@ INSERT INTO rel_ataque_personaje (id_ataque, id_personaje) VALUES
 (13,5), (14,5), (15,5), (16,6), (17,6), (18,6), (19,7), (20,7), (21,7), (22,8), (23,8), (24,8),
 (25,9), (26,9), (27,9), (28,10), (29,10), (30,10), (31,11), (32,11), (33,11), (34,12), (35,12), (36,12);
 
--- Relaciona cada ataque con su elemento
 CREATE TABLE rel_ataque_elemento (
     id_ataque INT PRIMARY KEY,
     id_elemento INT,
@@ -138,7 +164,7 @@ INSERT INTO rel_ataque_elemento (id_ataque, id_elemento) VALUES
 (25,2), (26,2), (27,2), (28,1), (29,4), (30,1), (31,7), (32,7), (33,7), (34,7), (35,7), (36,7);
 
 -- ==========================================
--- 6. INVOCACIONES (Directo a Personaje)
+-- 8. INVOCACIONES Y ARMAS (Manteniendo FK directas)
 -- ==========================================
 CREATE TABLE invocaciones (
     id_invocacion INT AUTO_INCREMENT PRIMARY KEY,
@@ -163,9 +189,6 @@ INSERT INTO invocaciones (nombre, descripcion, daño, id_personaje) VALUES
 ('Esqueleto Gigante','bomba boom', 200, 11),
 ('Tanque', 'Te revienta', 230, 12);
 
--- ==========================================
--- 7. ARMAS (Directo a Personaje)
--- ==========================================
 CREATE TABLE armas (
     id_arma INT AUTO_INCREMENT PRIMARY KEY,
     nombre_arma VARCHAR(50) NOT NULL,
@@ -178,9 +201,7 @@ CREATE TABLE armas (
     FOREIGN KEY (id_personaje) REFERENCES personajes(id_personaje)
 );
 
-INSERT INTO armas 
-(nombre_arma, descripcion, daño_extra, multiplicador_daño, prob_critico, multiplicador_critico, id_personaje)
-VALUES
+INSERT INTO armas (nombre_arma, descripcion, daño_extra, multiplicador_daño, prob_critico, multiplicador_critico, id_personaje) VALUES
 ('Espada del Alba', 'Espada mágica...', 25, 1.10, 0.15, 1.80, 1),
 ('Arco de Tormentas', 'Dispara flechas...', 20, 1.15, 0.20, 1.70, 2),
 ('Martillo de Titanes', 'Golpes devastadores.', 40, 1.25, 0.10, 2.00, 3),
@@ -189,83 +210,7 @@ VALUES
 ('Dagas de Sombra', 'Ataques rápidos.', 15, 1.30, 0.25, 1.90, 6),
 ('Rayban', 'Te deslumbra', 20, 1.4, 0.14, 1.67, 7),
 ('Bastón Glacial', 'Congela el entorno.', 22, 1.10, 0.16, 1.75, 8),
-('Karambit del Viento', 'Spin to win', 17, 1.25, 0.22, 1.80, 9),
+('Karambit del Viento', 'Velocidad extrema.', 17, 1.25, 0.22, 1.80, 9),
 ('Ballesta Arcana', 'Proyectiles precisos.', 28, 1.15, 0.19, 1.70, 10),
-('M4A4 Silenciada', 'Con tres cargadores.', 50, 1.8, 0.34, 3, 11),
+('M4A4 Silenciada', 'Con tres cargadores.', 28, 1.15, 0.19, 1.70, 11),
 ('Guadaña Infernal', 'Fuego del inframundo.', 35, 1.20, 0.14, 1.85, 12);
-
--- CAMBIA NOMBRE DE LAS TABLAS DE RELACION PARA QUITARLE EL REL!!!!!!!!
-ALTER TABLE rel_ataque_personaje RENAME ataque_personaje;
-ALTER TABLE rel_ataque_elemento RENAME ataque_elemento;
-
-
--- calcula el daño basico del ataque combinado con los multiplicadores de ataque del personaje y del arma
-DELIMITER //
-
-DROP PROCEDURE IF EXISTS daño_basico_tabla //
-CREATE PROCEDURE daño_basico_tabla()
-BEGIN
-SELECT 
-	a.nombre AS ataque,
-    p.nombre AS personaje,
-    ar.nombre_arma AS arma,
-    
-    -- daño base con personaje y arma
-    (a.daño_base * p.multiplicador_ataque * ar.multiplicador_daño + ar.daño_extra) AS daño_basico
-    
-FROM ataques a
-JOIN ataque_personaje ap ON a.id_ataque = ap.id_ataque
-JOIN personajes p ON p.id_personaje = ap.id_personaje
-JOIN armas ar ON p.id_personaje = ar.id_personaje;
-END //
-DELIMITER ;
-
-CALL daño_basico_tabla();
-
-
-
-DELIMITER //
-
-DROP FUNCTION IF EXISTS daño_basico_especifico //
-CREATE FUNCTION daño_basico_especifico(p_nombre VARCHAR(50))
-RETURNS DECIMAL(10,2)
-BEGIN
-DECLARE calculo DECIMAL(10,2);
-SELECT
--- daño base con personaje y arma
-(a.daño_base * p.multiplicador_ataque * ar.multiplicador_daño + ar.daño_extra) AS daño_basico
-INTO calculo
-FROM ataques a
-JOIN ataque_personaje ap ON a.id_ataque = ap.id_ataque
-JOIN personajes p ON p.id_personaje = ap.id_personaje
-JOIN armas ar ON p.id_personaje = ar.id_personaje
-WHERE a.nombre=p_nombre;
-
-RETURN calculo;
-END //
-DELIMITER ;
-
-SELECT daño_basico_especifico('Eco Nulo') AS daño_basico;
-
-
--- para el buscador general, crear una funcion que devuelva los nombres de los ataques concatenados
-
-
-/*-- daño crítico
-    (a.daño_base * p.multiplicador_ataque * ar.multiplicador_daño + ar.daño_extra) * ar.multiplicador_critico AS daño_critico,
-    
-    ar.prob_critico*/
-
-
-SELECT AVG(prob_critico)
-    FROM armas;
-
--- selecciona la probabilidad de critico de un ataque
-SELECT nombre_arma, 100*(prob_critico) AS porcentaje_critico
-FROM armas
-WHERE prob_critico > (
-	SELECT AVG(prob_critico)
-    FROM armas
-);
-
-
