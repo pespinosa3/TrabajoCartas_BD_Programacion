@@ -1,5 +1,6 @@
 package proyecto_cartas;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -80,4 +81,65 @@ public class Consultas {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public static void llamarProcedimiento(Connection conexion) {
+
+            
+        // 1. La llamada solo tiene un interrogante porque solo hay un parámetro IN
+        String query = "CALL daño_basico_insert(?)";
+        
+        try (CallableStatement cs = conexion.prepareCall(query)) {
+            
+            cs.setInt(1, 33);
+            
+            // 3. Ejecutamos como query y guardamos el resultado en un ResultSet
+            try (ResultSet rs = cs.executeQuery()) {
+                
+                // 4. Recorremos el ResultSet como si fuera un Statement normal aunque sea un procedimiento
+                while (rs.next()) {
+                    double a = rs.getDouble(1);
+                    
+                    System.out.println("Daño básico: "+a);
+                }
+                
+            }
+        } catch (SQLException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+	}
+	
+	
+	
+	
+	
+	/*public static void proc(Connection conexion) {
+		
+		String query = "SELECT nombre, potencia, daño_base FROM ataques WHERE nombre='Paliza'; ";
+		
+		try {
+			
+			Statement comando = conexion.createStatement();
+
+			ResultSet resultado = comando.executeQuery(query);
+			
+			if (!resultado.next()) {
+				System.out.println("La consulta:\n"+query+"\nno se encuentra en la base de datos actualmente");
+			}
+			else {
+				
+				do{
+					
+					System.out.println("Nombre: "+resultado.getString(1)
+							+"\nPotencia: "+resultado.getString(2)
+							+"\nDaño base: "+resultado.getDouble(3));
+
+					System.out.println("------------------------------------------");
+				}while(resultado.next());
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}*/
 }
