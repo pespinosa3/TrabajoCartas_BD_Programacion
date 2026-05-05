@@ -175,7 +175,13 @@ public class Principal {
 		
 		//llamarProcedimiento(conexion);
 		
-		Consultas.llamarProcedimiento(conexion);
+		//Consultas.llamarProcedimiento(conexion);
+		
+		Consultas.ñ(conexion);
+		
+		Consultas.daño_basico(conexion);
+		
+		
 		
 		System.out.println("\nTerminando conexión a la base de datos...");
 		
