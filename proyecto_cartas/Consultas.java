@@ -84,7 +84,8 @@ public class Consultas {
 	}
 	
 	
-	
+	//IMPORTANTE
+	//necesito entender el try que pone una condicion o algo asi en brackets
 	public static double llamarProcedimiento(Connection conexion, int id_ataque) {
 
             
@@ -119,20 +120,19 @@ public class Consultas {
 	
 	
 	
+	//metodo para hacer un COUNT() de los objetos de una tabla (reutilizable)
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	public static void daño_basico(Connection conexion) {
+	/**
+	 * metodo para hacer un COUNT() de los objetos de una tabla
+	 * @param conexion - es obligatorio en todos los metodos para establecer una conexion con la base de datos
+	 * @param columna - la columna de datos de la que quieres que se cuente el numero de datos que hay dentro
+	 * @param tabla - la tabla a la que pertenece esa columna
+	 * @return
+	 */
+	public static int count(Connection conexion, String columna, String tabla) {
 		
-		String query = "SELECT COUNT(id_ataque) FROM ataques; ";
+		String query = "SELECT COUNT("+columna+") FROM "+tabla;
 		int numero=0;
-		//int contador=0;
 		
 		try {
 			
@@ -157,42 +157,44 @@ public class Consultas {
 			e.printStackTrace();
 		}
 		
+		if(numero==0) {
+			System.out.println("No hay datos en la consulta de la tabla que has seleccionado");
+		}
 		
+		return numero;
+	}
+	
+	
+	
+	
+	
+	/**
+	 * Hace un count de la cantidad de ids que hay actualmente en ataque.
+	 * 
+	 * Luego por el numero de ataques que haya, va llamando al procedimiento daño_basico_insert que fue creado
+	 * especificamente para devolver el daño calculado de un ataque en concreto.
+	 * 
+	 * Y por ultimo añade el daño_basico calculado con su id_ataque correspondiente
+	 * @param conexion
+	 */
+	
+	public static void daño_basico(Connection conexion) {
+		
+		int numero_ids=0;
+		
+		//recojo aqui cuantos ataques hay en la tabla ataque
+		numero_ids = count(conexion,"id_ataque","ataques");
 		
 		int id_ataque=0;
         double danio=0;
 		do {
 			id_ataque+=1;
-			/*query = "CALL daño_basico_insert(?)";
-			
-			id_ataque+=1;
-	        try (CallableStatement cs = conexion.prepareCall(query)) {
-	            
-	            cs.setInt(1, id_ataque);
-	            
-	            // 3. Ejecutamos como query y guardamos el resultado en un ResultSet
-	            try (ResultSet rs = cs.executeQuery()) {
-	                
-	            	
-	                // 4. Recorremos el ResultSet como si fuera un Statement normal aunque sea un procedimiento
-	                while (rs.next()) {
-	                    danio = rs.getDouble(1);
-	                    
-	                    
-	                    
-	                    System.out.println("Daño básico: "+danio);
-	                }
-	                
-	            }
-	        } catch (SQLException e) {
-	            System.err.println("Error: " + e.getMessage());
-	        }*/
 	        
+			//recojo aqui cuanto daño hace cada ataque individualmente
 	        danio=llamarProcedimiento(conexion,id_ataque);
 			
 			
-			//voy ahora a insertar el dato que habia comprobado que no existia todavia con la query de mostrarCLientes
-			query = "INSERT INTO daño_calculado (id_ataque, daño_basico) VALUES (?,?)";
+			String query = "INSERT INTO daño_calculado (id_ataque, daño_basico) VALUES (?,?)";
 			
 			try {
 				PreparedStatement ps = conexion.prepareStatement(query);
@@ -211,22 +213,37 @@ public class Consultas {
 				
 				
 			} catch (SQLException e) {
-				//comprobar el error con un sysout del stacktrace
-				//molaria hacer un custom error con el signal de mysql y que lo printeara el stacktrace
 				e.printStackTrace();
-				System.out.println("Error en la query...");
+				System.out.println("Error en la consulta: "+query);
+				break;
 			}
-		}while(numero!=id_ataque);
+			
+		}while(numero_ids>id_ataque);
 	}
 	
+	/*
+	SOLUCION:
+	vale ya lo entiendo, solo tienes que hacer el loop en tu cabeza, imagina que la condicion es numero_ids>=id_ataque, y id_ataque
+	es 35, numero de ids es mayor o igual a 35? Si (numero_ids es 36), entonces entra en el loop de nuevo, suma 1, numero de ids es mayor o igual a 36? Si
+	y vuelve a loopear (AHI ESTA EL PROBLEMA), numero de ids es mayor o igual a 37, no, y ahora sale, el problema es que no me saltaba nada de error
+	
+	Sin embargo, si pones numero_ids>id_ataque y planteamos la misma situacion, numero de ids (36) es mayor que 35? Si, loopea, suma 1,
+	numero de ids es mayor que 36? NO. 36 no es mayor que 36. Y ahi se acaba, y has insertado todos los datos correctamente,
+	de la otra manera se quedaba en ejecucion, no se porqué (solucionalo)*/
 	
 	
 	
 	
-	public static void ñ(Connection conexion) {
+	/***
+	 * metodo para borrar TODOS LOS DATOS de una tabla
+	 * @param conexion
+	 * @param tabla - tabla de la que quieres que se eliminen todos los datos
+	 */
+	
+	public static void borrarTabla(Connection conexion, String tabla) {
 		
 		//voy ahora a insertar el dato que habia comprobado que no existia todavia con la query de mostrarCLientes
-		String query = "DELETE FROM daño_calculado";
+		String query = "DELETE FROM "+tabla;
 		
 		try {
 			PreparedStatement ps = conexion.prepareStatement(query);
@@ -242,7 +259,7 @@ public class Consultas {
 			
 			
 		} catch (SQLException e) {
-			System.out.println("No existe ese/esos dato/s para borrar de la base de datos");
+			System.out.println("No existen esos datos para borrar de la base de datos");
 			e.getMessage();
 			
 		}

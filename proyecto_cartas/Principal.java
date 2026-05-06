@@ -177,7 +177,7 @@ public class Principal {
 		
 		//Consultas.llamarProcedimiento(conexion);
 		
-		Consultas.ñ(conexion);
+		Consultas.borrarTabla(conexion,"daño_calculado");
 		
 		Consultas.daño_basico(conexion);
 		
