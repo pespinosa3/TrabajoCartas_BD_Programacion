@@ -22,6 +22,7 @@ public class Consultas {
 	//buscador general, en el que introduzcas un dato y te lo busque en toda la base de datos, implementar subconsultas y funcion
 	//buscador de ataques, de personajes, armas, etc
 	
+	//podemos hacer que devuleva tablas tambien
 	
 	//y tambien insertar un personaje que el usuario quiera introducir con los datos que quiera. con su arma y su invocacion
 	public static void ataques(Connection conexion) {
@@ -158,7 +159,7 @@ public class Consultas {
 		}
 		
 		if(numero==0) {
-			System.out.println("No hay datos en la consulta de la tabla que has seleccionado");
+			System.out.println("No hay datos en la consulta de la tabla que has seleccionado (error en metodo count)");
 		}
 		
 		return numero;
@@ -265,4 +266,10 @@ public class Consultas {
 		}
 		
 	}
+	
+	
+	
+	
+	//buscador: un cursor que recorra cada tabla
+	//no podemos hacer una consulta general porque cada tabla tiene un numero diferente de columnas
 }

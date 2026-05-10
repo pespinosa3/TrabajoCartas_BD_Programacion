@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 public class MySQLConnection {
     
-	
 	public Connection mySQLConnect() {
         
 		String base_datos= "juego_cartas";
@@ -15,7 +14,7 @@ public class MySQLConnection {
         String url = "jdbc:mysql://localhost:3306/"+base_datos; // url bbdd
         String usuario = "root"; // Cambia por tu usuario de MySQL
         String password = "12345"; // Cambia por tu contraseña
-
+        
         Connection conexion = null;
         
         try {
