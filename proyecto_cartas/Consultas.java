@@ -6,14 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Consultas {
 	
 	//me gustaria hacer uno que recibiera la query por parametro tambien, o que te pidiera el nombre de las tablas
 	//de las que quieres buscar un dato, y luego el nombre del dato especifico, y hiciera un select y un where o algo asi
-	
-	//tambien me deberia de crear otra clase para todos los metodos de consultas, insercion y eliminacion de datos
 	
 	/*podrias tambien, crear una clase con atributos estandard y asi solo tener que insertarlos dentro de los values del
 	preparedStatement en las interrogaciones, en lo de setTipodedato*/
@@ -269,7 +268,151 @@ public class Consultas {
 	
 	
 	
+	public static void borrarDato(Connection conexion, String tabla, String columna, String dato) {
+		
+		//voy ahora a insertar el dato que habia comprobado que no existia todavia con la query de mostrarCLientes
+		String query = "DELETE FROM "+tabla+ " WHERE "+columna+" = "+dato;
+		
+		try {
+			PreparedStatement ps = conexion.prepareStatement(query);
+			
+			//executeUpdate devuelve un 1 si se inserta bien o un 0 si no devuelve nada
+			int resultado = ps.executeUpdate();
+			
+			
+			if (resultado == 0) {
+				
+				System.out.println("NO se ha eliminado el dato");
+			}
+			
+			
+		} catch (SQLException e) {
+			System.out.println("No existen esos datos para borrar de la base de datos");
+			e.getMessage();
+			
+		}
+		
+	}
+	
+	
+	
 	
 	//buscador: un cursor que recorra cada tabla
 	//no podemos hacer una consulta general porque cada tabla tiene un numero diferente de columnas
+	
+	
+	
+	
+	/*un arraylist con los nombres de las tablas, una sola consulta (select nombre FROM ? WHERE nombre LIKE "tabla")
+	
+	*/
+	
+	public static void buscador(Connection conexion) {
+		String nombre=null;
+		Scanner sc=new Scanner(System.in);
+		System.out.println("Introduce un termino a buscar:");
+		nombre=sc.nextLine();
+		
+		boolean encontrado=false;
+		
+		//las comentadas con que hay que añadirle campo descripcion a la tabla
+		ArrayList<String> tablas= new ArrayList<>();
+		tablas.add("personajes");
+		tablas.add("armas");
+		tablas.add("elementos");
+		tablas.add("ataques");
+		tablas.add("estados");
+		//tablas.add("casas");
+		tablas.add("invocaciones");
+		
+		String query=null;
+		
+		for (String tabla : tablas) {
+			
+			//el \" hace que no se cierre el string de texto
+			query = "SELECT nombre, descripcion FROM "+tabla+" WHERE nombre LIKE CONCAT(\"%\","+" '"+nombre+"' "+",\"%\"); ";
+			
+			try {
+				
+				PreparedStatement pst = conexion.prepareStatement(query);
+				
+				ResultSet resultado = pst.executeQuery(query);
+				
+				
+				if (resultado.next()) {
+					do{
+						System.out.println("Nombre: "+resultado.getString(1)
+								+"\nDescripción: "+resultado.getString(2));
+						System.out.println("Pertenece a la tabla "+tabla);
+					}while(resultado.next());
+					
+					encontrado=true;
+				}
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if(!encontrado) {
+			System.out.println("La consulta:\n"+query+"\nno se encuentra en la base de datos actualmente");
+		}
+	}
+	
+	
+	public static void consultaAtaques(Connection conexion) {
+		String query = "SELECT * FROM ? WHERE nombre LIKE CONCAT(\"%\",p_nombre,\"%\"); ";
+		
+		try {
+			
+			Statement comando = conexion.createStatement();
+
+			ResultSet resultado = comando.executeQuery(query);
+			
+			
+			if (!resultado.next()) {
+				System.out.println("La consulta:\n"+query+"\nno se encuentra en la base de datos actualmente");
+			}
+			else {
+				
+				do{
+					
+					System.out.println("Nombre: "+resultado.getString(1)
+							+"\nPotencia: "+resultado.getString(2)
+							+"\nDaño base: "+resultado.getDouble(3));
+				}while(resultado.next());
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void consultaPersonaje(Connection conexion) {
+		String query = "SELECT * FROM ? WHERE nombre LIKE CONCAT(\"%\",p_nombre,\"%\"); ";
+		
+		try {
+			
+			Statement comando = conexion.createStatement();
+
+			ResultSet resultado = comando.executeQuery(query);
+			
+			
+			if (!resultado.next()) {
+				System.out.println("La consulta:\n"+query+"\nno se encuentra en la base de datos actualmente");
+			}
+			else {
+				
+				do{
+					
+					System.out.println("Nombre: "+resultado.getString(1)
+							+"\nPotencia: "+resultado.getString(2)
+							+"\nDaño base: "+resultado.getDouble(3));
+				}while(resultado.next());
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

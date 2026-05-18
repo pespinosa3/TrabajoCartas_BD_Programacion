@@ -179,9 +179,11 @@ public class Principal {
 		
 		//Consultas.borrarTabla(conexion,"daño_calculado");
 		
+		//PedirDatos.insertarAtaque(conexion);
+		
+		Consultas.buscador(conexion);
+		
 		//Consultas.daño_basico(conexion);
-		
-		
 		
 		System.out.println("\nTerminando conexión a la base de datos...");
 		
