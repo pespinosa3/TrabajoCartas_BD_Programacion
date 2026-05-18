@@ -64,21 +64,23 @@ CREATE TABLE casas (
     id_casa INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     emblema VARCHAR(50),
+    descripcion VARCHAR(150),
     id_comandante INT, -- Aquí guardaremos el ID del capitán
     dicho VARCHAR(100)
 );
 
 -- 2. Insertamos las casas (dejamos el ID de comandante listo)
-INSERT INTO casas (nombre, emblema, id_comandante, dicho) VALUES
-('Legión Administrativa', 'Martillo Dorado', 11, 'Sigue la normativa, está subida en #general'), -- Pablo
-('Orden del Caos', 'Dementor', 12, 'EL invierno está cerca'),      -- Jaime
-('Lannister', 'Lobo dorado', 2, 'Un Lannister siempre paga sus deudas'),           -- Bolt
-('Marea Eterna', 'Nemo', 4, 'Buscando a Nemo');  -- Hydra
+INSERT INTO casas (nombre, emblema, descripcion, id_comandante, dicho) VALUES
+('Legión Administrativa', 'Martillo Dorado', 'Obedece la normativa o serás expulsado' , 11, 'Sigue la normativa, está subida en #general'), -- Pablo
+('Orden del Caos', 'Dementor', 'Orden abisal', 12, 'EL invierno está cerca'),      -- Jaime
+('Lannister', 'Lobo dorado','Cuanto más prima...', 2, 'Un Lannister siempre paga sus deudas'),           -- Bolt
+('Marea Eterna', 'Nemo','Se la pasan en el mar', 4, 'Buscando a Nemo');  -- Hydra
 
 
 CREATE TABLE personajes (
     id_personaje INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
+    descripcion VARCHAR(150),
     vida INT,
     multiplicador_ataque DECIMAL(3,2),
     id_casa INT,
@@ -94,22 +96,22 @@ CREATE TABLE personajes (
 
 -- 3. Inserción de Personajes
 -- Respetamos el orden: Capitanes primero para evitar errores de clave foránea
-INSERT INTO personajes (id_personaje, nombre, vida, multiplicador_ataque, id_casa, id_comandante, id_elemento_1, id_elemento_2) VALUES
+INSERT INTO personajes (id_personaje, nombre, descripcion, vida, multiplicador_ataque, id_casa, id_comandante, id_elemento_1, id_elemento_2) VALUES
 -- CAPITANES
-(11, 'Pablo', 500, 2.00, 1, NULL, 7, NULL),     -- Admin
-(12, 'Jaime', 5000, 1.00, 2, NULL, 7, NULL),    -- Admin
-(2, 'Bolt el perro ese', 700, 1.40, 3, NULL, 2, 3), -- Eléctrico + Solar
-(4, 'Hydra', 1100, 1.00, 4, NULL, 6, 4),        -- Líquido + Planta
+(11, 'Pablo','moderador de las tierras sagradas', 500, 2.00, 1, NULL, 7, NULL),     -- Admin
+(12, 'Jaime','moderador de las tierras oscuras', 5000, 1.00, 2, NULL, 7, NULL),    -- Admin
+(2, 'Bolt el perro ese','el perro de la pelicula esa (no se como se llama)', 700, 1.40, 3, NULL, 2, 3), -- Eléctrico + Solar
+(4, 'Hydra','la del dark souls 1', 1100, 1.00, 4, NULL, 6, 4),        -- Líquido + Planta
 
 -- SOLDADOS (Asociados a sus capitanes y elementos)
-(1, 'Aeris', 900, 1.20, 1, 11, 1, 3),           -- Vacío + Solar
-(3, 'Terrax', 1400, 0.85, 1, 11, 5, NULL),      -- Mineral
-(5, 'Flora', 800, 1.30, 2, 12, 4, NULL),        -- Planta
-(6, 'Umbra', 600, 1.50, 2, 12, 1, NULL),        -- Vacío
-(7, 'Ignis', 950, 1.15, 3, 2, 3, NULL),         -- Solar
-(8, 'Santa Claus', 1200, 0.95, 3, 2, 6, 5),     -- Líquido + Mineral
-(9, 'Pikacho', 750, 1.35, 4, 4, 2, NULL),       -- Electricidad
-(10, 'Dementor', 650, 1.45, 4, 4, 1, 4);        -- Vacío + Planta
+(1, 'Aeris','ninfa del bosque', 900, 1.20, 1, 11, 1, 3),           -- Vacío + Solar
+(3, 'Terrax','golem de roca', 1400, 0.85, 1, 11, 5, NULL),      -- Mineral
+(5, 'Flora','flower power', 800, 1.30, 2, 12, 4, NULL),        -- Planta
+(6, 'Fran','leñador experto, ha perfeccionado el uso del hacha', 600, 1.50, 2, 12, 1, NULL),        -- Vacío
+(7, 'Mary Angel','Te controla la excepción', 950, 1.15, 3, 2, 3, NULL),         -- Solar
+(8, 'Santa Claus','Te va a traer carbón que te has portado como el culo', 1200, 0.95, 3, 2, 6, 5),     -- Líquido + Mineral
+(9, 'Pikacho','Primo agresivo, drogadicto de pikachu', 750, 1.35, 4, 4, 2, NULL),       -- Electricidad
+(10, 'Gondalf','Gandalf si fuera gitano', 650, 1.45, 4, 4, 1, 4);        -- Vacío + Planta
 
 
 -- 3. Creamos la tabla Personajes con sus relaciones
@@ -189,7 +191,7 @@ INSERT INTO ataques (nombre, descripcion, potencia, daño_base, coste_mana) VALU
 ('Zap', 'Daño en area leve que puede paralizar', 'ligero', 19, 1),
 ('Trueno', 'La onda de sonido es devastadora, te rompe los tímpanos', 'normal', 43, 3),
 ('Tormenta Eléctrica', 'Área masiva de daño persistente que dura el resto de la partida', 'potente', 89, 6),
-('Eco Sombrío', 'Ataque oscuro.', 'ligero', 21, 1),
+('Eco Nulo', 'Primer ataque que se creo en la base de datos', 'ligero', 21, 1),
 ('Polen Oscuro', 'Envenena a todo jugador fumador de porros', 'normal', 39, 3),
 ('Colapso Nocturno', 'Gran daño.', 'potente', 91, 6),
 ('Tortón', 'Con la mano abierta', 'ligero', 35, 2),
@@ -205,8 +207,9 @@ INSERT INTO ataques (nombre, descripcion, potencia, daño_base, coste_mana) VALU
 
 -- esto es para no tener que añadirle a la tabla de personaje el id de sus tres ataques y que se quede mas limpia y bonita
 CREATE TABLE ataque_personaje (
-    id_ataque INT PRIMARY KEY,
+    id_ataque INT,
     id_personaje INT,
+    PRIMARY KEY (id_ataque, id_personaje),
     FOREIGN KEY (id_ataque) REFERENCES ataques(id_ataque) ON DELETE CASCADE,
     FOREIGN KEY (id_personaje) REFERENCES personajes(id_personaje) ON DELETE CASCADE
 );
@@ -219,18 +222,23 @@ INSERT INTO ataque_personaje (id_ataque, id_personaje) VALUES
 
 -- otra tabla relacional separada, de nuevo para que aparezcan mas limpias en aspecto, por funcinalidad realmente no es necesario
 CREATE TABLE ataque_elemento (
-    id_ataque INT PRIMARY KEY,
+    id_ataque INT,
     id_elemento INT,
     id_estado INT,
+    PRIMARY KEY(id_ataque, id_elemento, id_estado),
     FOREIGN KEY (id_ataque) REFERENCES ataques(id_ataque) ON DELETE CASCADE,
     FOREIGN KEY (id_elemento) REFERENCES elementos(id_elemento) ON DELETE CASCADE,
     FOREIGN KEY (id_estado) REFERENCES estados(id_estado) ON DELETE CASCADE
 );
 
-INSERT INTO ataque_elemento (id_ataque, id_elemento) VALUES
-(1,1), (2,3), (3,1), (4,2), (5,2), (6,3), (7,5), (8,5), (9,5), (10,6), (11,6), (12,4),
-(13,4), (14,4), (15,4), (16,1), (17,1), (18,1), (19,3), (20,3), (21,3), (22,6), (23,5), (24,6),
-(25,2), (26,2), (27,2), (28,1), (29,4), (30,1), (31,7), (32,7), (33,7), (34,7), (35,7), (36,7);
+
+INSERT INTO ataque_elemento (id_ataque, id_elemento, id_estado) VALUES
+(1, 1, 1), (2, 3, 3), (3, 1, 1), (4, 2, 2), (5, 2, 2), (6, 3, 3), 
+(7, 5, 5), (8, 5, 5), (9, 5, 5), (10, 6, 6), (11, 6, 6), (12, 4, 4),
+(13, 4, 4), (14, 4, 4), (15, 4, 4), (16, 1, 1), (17, 1, 1), (18, 1, 1), 
+(19, 3, 3), (20, 3, 3), (21, 3, 3), (22, 6, 6), (23, 5, 5), (24, 6, 6),
+(25, 2, 2), (26, 2, 2), (27, 2, 2), (28, 1, 1), (29, 4, 4), (30, 1, 1), 
+(31, 7, 7), (32, 7, 7), (33, 7, 7), (34, 7, 7), (35, 7, 7), (36, 7, 7);
 
 -- ==========================================
 -- 8. INVOCACIONES Y ARMAS
