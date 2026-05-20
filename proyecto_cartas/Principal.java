@@ -183,6 +183,8 @@ public class Principal {
 		
 		Consultas.buscador(conexion);
 		
+		PedirDatos.insertarPersonaje(conexion);
+		
 		//Consultas.daño_basico(conexion);
 		
 		System.out.println("\nTerminando conexión a la base de datos...");
