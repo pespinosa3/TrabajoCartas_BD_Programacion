@@ -15,7 +15,8 @@ SELECT
 FROM ataques a
 JOIN ataque_personaje ap ON a.id_ataque = ap.id_ataque
 JOIN personajes p ON p.id_personaje = ap.id_personaje
-JOIN armas ar ON p.id_personaje = ar.id_personaje;
+JOIN personaje_arma pa ON pa.id_personaje = p.id_personaje
+JOIN armas ar ON ar.id_arma=pa.id_arma;
 END //
 DELIMITER ;
 
@@ -36,7 +37,8 @@ SELECT
 FROM ataques a
 JOIN ataque_personaje ap ON a.id_ataque = ap.id_ataque
 JOIN personajes p ON p.id_personaje = ap.id_personaje
-JOIN armas ar ON p.id_personaje = ar.id_personaje
+JOIN personaje_arma pa ON pa.id_personaje = p.id_personaje
+JOIN armas ar ON ar.id_arma=pa.id_arma
 WHERE p_id_ataque = a.id_ataque;
 END //
 DELIMITER ;
@@ -62,7 +64,8 @@ INTO calculo
 FROM ataques a
 JOIN ataque_personaje ap ON a.id_ataque = ap.id_ataque
 JOIN personajes p ON p.id_personaje = ap.id_personaje
-JOIN armas ar ON p.id_personaje = ar.id_personaje
+JOIN personaje_arma pa ON pa.id_personaje = p.id_personaje
+JOIN armas ar ON ar.id_arma=pa.id_arma
 WHERE a.nombre=p_nombre;
 
 RETURN calculo;
@@ -178,4 +181,4 @@ DELIMITER ;
 
 CALL buscador('personajes','Pablo');
 
-
+SELECT * FROM personajes;
