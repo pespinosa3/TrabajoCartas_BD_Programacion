@@ -278,22 +278,65 @@ CREATE TABLE armas (
     FOREIGN KEY (id_personaje) REFERENCES personajes(id_personaje) ON DELETE CASCADE
 );
 
-INSERT INTO armas (nombre, descripcion, daño_extra, multiplicador_daño, prob_critico, multiplicador_critico, id_personaje) VALUES
-('Espadón de Luz de Luna', 'Espada gigante de uso a dos manos que requiere sabiduría para usarse', 25, 1.10, 0.15, 1.80, 1),
-('Arco de Tormentas', 'Dispara flechas con gran potencia', 20, 1.15, 0.20, 1.70, 2),
-('Martillo de Titanes', 'Golpes devastadores.', 40, 1.25, 0.10, 2.00, 3),
-('Tridente Abisal', 'Domina los océanos.', 30, 1.10, 0.12, 1.80, 4),
-('Bastón de Raíces', 'Energía natural.', 18, 1.20, 0.18, 1.60, 5),
-('Dagas de Sombra', 'Ataques rápidos.', 15, 1.30, 0.25, 1.90, 6),
-('Rayban', 'Te deslumbra', 20, 1.4, 0.14, 1.67, 7),
-('Bastón Glacial', 'Congela el entorno.', 22, 1.10, 0.16, 1.75, 8),
-('Karambit de Viento', 'Cuchillo giratorio con la fuerza de los espiritus de Viento', 17, 1.25, 0.22, 1.80, 9),
-('Ballesta Arcana', 'Proyectiles precisos.', 28, 1.15, 0.19, 1.70, 10),
-('M4A4 Silenciada', 'Con tres cargadores extra', 28, 1.15, 0.19, 1.70, 11),
-('Guadaña Infernal', 'Fuego del inframundo.', 35, 1.20, 0.14, 1.85, 12);
+INSERT INTO armas (nombre, descripcion, daño_extra, multiplicador_daño, prob_critico, multiplicador_critico) VALUES
+('Espadón de Luz de Luna', 'Espada gigante de uso a dos manos que requiere sabiduría para usarse', 25, 1.10, 0.15, 1.80),
+('Arco de Tormentas', 'Dispara flechas con gran potencia', 20, 1.15, 0.20, 1.70),
+('Martillo de Titanes', 'Golpes devastadores.', 40, 1.25, 0.10, 2.00),
+('Tridente Abisal', 'Domina los océanos.', 30, 1.10, 0.12, 1.80),
+('Bastón de Raíces', 'Energía natural.', 18, 1.20, 0.18, 1.60),
+('Dagas de Sombra', 'Ataques rápidos.', 15, 1.30, 0.25, 1.90),
+('Rayban', 'Te deslumbra', 20, 1.4, 0.14, 1.67),
+('Bastón Glacial', 'Congela el entorno.', 22, 1.10, 0.16, 1.75),
+('Karambit de Viento', 'Cuchillo giratorio con la fuerza de los espiritus de Viento', 17, 1.25, 0.22, 1.80),
+('Ballesta Arcana', 'Proyectiles precisos.', 28, 1.15, 0.19, 1.70),
+('M4A4 Silenciada', 'Con tres cargadores extra', 28, 1.15, 0.19, 1.70),
+('Guadaña Infernal', 'Fuego del inframundo.', 35, 1.20, 0.14, 1.85);
 
 CREATE TABLE daño_calculado(
 	id_ataque INT NOT NULL,
     daño_basico DECIMAL(10,2),
     FOREIGN KEY (id_ataque) REFERENCES ataques(id_ataque) ON DELETE CASCADE
 );
+
+/*Hemos creado esta tabla relacional porque necesitabamos que un mismo personaje tuviera varias armas, aunque al principio decidieramos lo contrario,
+cambios de opinion, entonces esta tabla es necesaria para que un mismo personaje pueda tener varias armas, que no va a ser el caso, o para que un arma
+pueda ser asignada a varios personajes, que es lo que buscamos nosotros cuando añadamos un nuevo personaje.
+
+Tambien es necesario poner dentro de PRIMARY KEY() las dos variables para que no se repitan los datos por ejemplo (1,1) en la tabla, y los valores sean unicos
+
+Vale de hecho en verdad lo que hay que hacer es solo meter personaje como primary key, porque es la que queremos que no se repita, la que se repite es el arma
+entonces no hace falta meter en primary key, porque si metes dos valores en primary key lo  unico que impides es que se repita el patron combinando los dos,
+pero los dos se pueden usar muchas veces dentro de la base de datos
+
+Conclusión: PRIMARY KEY(id_personaje): impides que se repita el personaje más veces en la tabla, y cada personaje tendrá un arma asignada
+			PRIMARY KEY(id_arma): se repetirá solo una vez el id de cada arma, y tendrá un id_personaje asignado, podrá tener varios asignados
+            PRIMARY KEY(id_personaje, id_arma): impides que se repita la combinación de (id_personaje, id_arma) pero no restringes el número de veces que se menciona
+												ninguno de los IDs
+                                                
+No le ponemos NOT NULL a ninunga tabla relacional porque rompería la base de datos si queremos estar añadiendo nuevos datos constantemente ya que siempre que 
+añadieras un dato, saldría error porque otro campo no podría ser nulo, y los campos que se rellenan automaticamente no serán nulos
+---->
+De hecho habría que añadir a las tablas que tengan dos primary keys (que hay que cambiar eso, porque no debería de haber en casi ninguna, ya que siempre hay un campo
+donde no queremos que se repita una de las keys de referencia (excepto ataque_personaje), como por ejemplo, en ataque elemento, ataque no se repite) los datos
+manualmente ya que no se van a llenar solos si tenemos dos primary keys, por lo que entiendo.*/
+CREATE TABLE personaje_arma(
+	id_personaje INT,
+    id_arma INT,
+    PRIMARY KEY(id_personaje),
+    FOREIGN KEY (id_personaje) REFERENCES personajes(id_personaje) ON DELETE CASCADE,
+    FOREIGN KEY (id_arma) REFERENCES armas(id_arma) ON DELETE CASCADE
+);
+
+INSERT INTO personaje_arma(id_personaje, id_arma) VALUES
+(1,1),
+(2,2),
+(3,3),
+(4,4),
+(5,5),
+(6,6),
+(7,7),
+(8,8),
+(9,9),
+(10,10),
+(11,11),
+(12,12);
