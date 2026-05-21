@@ -171,7 +171,7 @@ public class Consultas {
 	/**
 	 * Hace un count de la cantidad de ids que hay actualmente en ataque.
 	 * 
-	 * Luego por el numero de ataques que haya, va llamando al procedimiento daño_basico_insert que fue creado
+	 * Luego, según el numero de ataques que haya, va llamando al procedimiento daño_basico_insert que fue creado
 	 * especificamente para devolver el daño calculado de un ataque en concreto.
 	 * 
 	 * Y por ultimo añade el daño_basico calculado con su id_ataque correspondiente
