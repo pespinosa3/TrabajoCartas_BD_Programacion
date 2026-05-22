@@ -17,44 +17,26 @@ INSERT INTO estados (nombre, descripcion, turnos) VALUES
 ('Envenenado', 'Te va drenando vida',1), ('Cristalizado','La roca',2),
 ('Mojado','Duchita fria para empezar el dia',1), ('Moderado','Has sido banneano',3);
 
+
 -- ==========================================
 -- 2. ELEMENTOS
 -- ==========================================
-/*CREATE TABLE elementos (
-    id_elemento INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50) NOT NULL,
-    descripcion TEXT,
-    id_estado INT,
-    FOREIGN KEY (id_estado) REFERENCES estados(id_estado)
-);
-
-INSERT INTO elementos (nombre, descripcion, id_estado) VALUES
-('Vacío', 'Ausencia de materia.', 1),
-('Electricidad', 'Energía eléctrica.', 2),
-('Solar', 'Energía del sol.', 3),
-('Planta', 'Naturaleza viva.', 4),
-('Mineral', 'Roca y tierra.', 5),
-('Líquido', 'Fluidos.', 6),
-('Admin', 'Más vale que sigas las reglas', 7);*/
-
 
 -- 1. Tabla Elementos (Sin cambios, solo para referencia de FK)
 CREATE TABLE elementos (
     id_elemento INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
-    descripcion TEXT,
-    id_estado INT,
-    FOREIGN KEY (id_estado) REFERENCES estados(id_estado) ON DELETE CASCADE
+    descripcion TEXT
 );
 
-INSERT INTO elementos (nombre, descripcion, id_estado) VALUES
-('Vacío', 'Ausencia de materia.', 1),
-('Electricidad', 'Energía eléctrica.', 2),
-('Solar', 'Energía del sol.', 3),
-('Planta', 'Naturaleza viva.', 4),
-('Mineral', 'Roca y tierra.', 5),
-('Líquido', 'Fluidos.', 6),
-('Admin', 'Más vale que siga las reglas', 7);
+INSERT INTO elementos (nombre, descripcion) VALUES
+('Vacío', 'Ausencia de materia.'),
+('Electricidad', 'Energía eléctrica.'),
+('Solar', 'Energía del sol.'),
+('Planta', 'Naturaleza viva.'),
+('Mineral', 'Roca y tierra.'),
+('Líquido', 'Fluidos.'),
+('Admin', 'Más vale que siga las reglas');
 
 -- 2. Tabla Personajes (Con las dos nuevas columnas de elementos)
 
@@ -114,42 +96,7 @@ INSERT INTO personajes (id_personaje, nombre, descripcion, vida, multiplicador_a
 (10, 'Gondalf','Gandalf si fuera gitano', 650, 1.45, 4, 4, 1, 4);        -- Vacío + Planta
 
 
--- 3. Creamos la tabla Personajes con sus relaciones
-/*CREATE TABLE personajes (
-    id_personaje INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50) NOT NULL,
-    vida INT,
-    multiplicador_ataque DECIMAL(3,2),
-    id_casa INT,
-    id_comandante INT, -- Relación reflexiva
-    FOREIGN KEY (id_casa) REFERENCES casas(id_casa),
-    FOREIGN KEY (id_comandante) REFERENCES personajes(id_personaje)
-);
 
--- 4. Insertamos los personajes. 
--- IMPORTANTE: Insertamos primero a los capitanes para evitar el error 1452 al asignar comandantes.
-INSERT INTO personajes (id_personaje, nombre, vida, multiplicador_ataque, id_casa, id_comandante) VALUES
--- CAPITANES (Comandante en NULL)
-(11, 'Pablo', 500, 2.00, 1, NULL),
-(12, 'Jaime', 5000, 1.00, 2, NULL),
-(2, 'Bolt el perro ese', 700, 1.40, 3, NULL),
-(4, 'Hydra', 1100, 1.00, 4, NULL),
-
--- SOLDADOS CASA 1 (Pablo)
-(1, 'Aeris', 900, 1.20, 1, 11),
-(3, 'Terrax', 1400, 0.85, 1, 11),
-
--- SOLDADOS CASA 2 (Jaime)
-(5, 'Flora', 800, 1.30, 2, 12),
-(6, 'Umbra', 600, 1.50, 2, 12),
-
--- SOLDADOS CASA 3 (Bolt)
-(7, 'Ignis', 950, 1.15, 3, 2),
-(8, 'Santa Claus', 1200, 0.95, 3, 2),
-
--- SOLDADOS CASA 4 (Hydra)
-(9, 'Pikacho', 750, 1.35, 4, 4),
-(10, 'Dementor', 650, 1.45, 4, 4);*/
 
 -- ==========================================
 -- 6. ATAQUES (Limpia)
@@ -225,7 +172,7 @@ CREATE TABLE ataque_elemento (
     id_ataque INT,
     id_elemento INT,
     id_estado INT,
-    PRIMARY KEY(id_ataque, id_elemento, id_estado),
+    PRIMARY KEY(id_ataque),
     FOREIGN KEY (id_ataque) REFERENCES ataques(id_ataque) ON DELETE CASCADE,
     FOREIGN KEY (id_elemento) REFERENCES elementos(id_elemento) ON DELETE CASCADE,
     FOREIGN KEY (id_estado) REFERENCES estados(id_estado) ON DELETE CASCADE
@@ -273,9 +220,7 @@ CREATE TABLE armas (
     daño_extra DECIMAL(5,2) DEFAULT 0,
     multiplicador_daño DECIMAL(3,2) DEFAULT 1.00,
     prob_critico DECIMAL(3,2) DEFAULT 0.05,
-    multiplicador_critico DECIMAL(3,2) DEFAULT 1.50,
-    id_personaje INT UNIQUE,
-    FOREIGN KEY (id_personaje) REFERENCES personajes(id_personaje) ON DELETE CASCADE
+    multiplicador_critico DECIMAL(3,2) DEFAULT 1.50
 );
 
 INSERT INTO armas (nombre, descripcion, daño_extra, multiplicador_daño, prob_critico, multiplicador_critico) VALUES
@@ -284,14 +229,19 @@ INSERT INTO armas (nombre, descripcion, daño_extra, multiplicador_daño, prob_c
 ('Martillo de Titanes', 'Golpes devastadores.', 40, 1.25, 0.10, 2.00),
 ('Tridente Abisal', 'Domina los océanos.', 30, 1.10, 0.12, 1.80),
 ('Bastón de Raíces', 'Energía natural.', 18, 1.20, 0.18, 1.60),
-('Dagas de Sombra', 'Ataques rápidos.', 15, 1.30, 0.25, 1.90),
-('Rayban', 'Te deslumbra', 20, 1.4, 0.14, 1.67),
+('Hacha de Evaluación', 'El hacha caera sobre ti si osas equivocarte', 15, 1.30, 0.25, 1.90),
+('Rayban', 'Para que yo pueda lucir, tu vas a sufrir', 20, 1.4, 0.14, 1.67),
 ('Bastón Glacial', 'Congela el entorno.', 22, 1.10, 0.16, 1.75),
 ('Karambit de Viento', 'Cuchillo giratorio con la fuerza de los espiritus de Viento', 17, 1.25, 0.22, 1.80),
 ('Ballesta Arcana', 'Proyectiles precisos.', 28, 1.15, 0.19, 1.70),
 ('M4A4 Silenciada', 'Con tres cargadores extra', 28, 1.15, 0.19, 1.70),
 ('Guadaña Infernal', 'Fuego del inframundo.', 35, 1.20, 0.14, 1.85);
 
+
+/*Esta tabla se creo con el proposito de hacer el juego jugable, con el poder del ataque ya calculado para no tener que estar calculandolo todo el
+rato cada vez quelo quieras usar
+
+Los datos se insertan desde java, en el archivo sql solo encontrarás el CREATE TABLE de la tabla, no el INSERT INTO*/
 CREATE TABLE daño_calculado(
 	id_ataque INT NOT NULL,
     daño_basico DECIMAL(10,2),
