@@ -181,11 +181,18 @@ public class Principal {
 		
 		//PedirDatos.insertarAtaque(conexion);
 		
-		Consultas.buscador(conexion);
+		//Consultas.buscador(conexion);
 		
-		PedirDatos.insertarPersonaje(conexion);
+		//PedirDatos.insertarPersonaje(conexion);
 		
 		//Consultas.daño_basico(conexion);
+		
+		//VentanaCreacion vc = new VentanaCreacion("/img/gemini cartas imagenes/fondo princiapal.png");
+		
+		Menu menu= new Menu();
+		VentanaCreacion vc = new VentanaCreacion();
+		Escuchador esc = new Escuchador(menu,vc);
+		
 		
 		System.out.println("\nTerminando conexión a la base de datos...");
 		

@@ -4,79 +4,77 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Menu extends JFrame {
-
-    public Menu(String p_fondo) {
-    	
+	
+    public Menu() {
         // 1. EL FONDO 
-        JLabel fondo = new JLabel(new ImageIcon(getClass().getResource(p_fondo)));
+        JLabel fondo = new JLabel(new ImageIcon(getClass().getResource("/img/fondo bueno.png")));
         fondo.setOpaque(true);
         fondo.setBackground(Color.BLACK); 
         fondo.setLayout(new BorderLayout()); 
 
-        // 2. PANEL DEL TÍTULO (Arriba y centrado)
+        // 2. PANEL DEL TÍTULO
         JPanel panelTitulo = new JPanel();
         panelTitulo.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         panelTitulo.setOpaque(false); 
         
-        // --- AQUÍ HACEMOS EL LOGO MÁS PEQUEÑO ---
-        // Cargamos la imagen del logo original
         ImageIcon iconoLogoOriginal = new ImageIcon(getClass().getResource("/img/gemini cartas imagenes/logo.png"));
         Image imgLogo = iconoLogoOriginal.getImage();
-        // Lo redimensionamos a un tamaño estándar más pequeño (350 de ancho por 90 de alto)
         Image imgLogoRedimensionada = imgLogo.getScaledInstance(600, 200, Image.SCALE_SMOOTH);
         JLabel labelTitulo = new JLabel(new ImageIcon(imgLogoRedimensionada));
         
         panelTitulo.add(labelTitulo);
         fondo.add(panelTitulo, BorderLayout.NORTH); 
 
-        // 3. PANEL CONTENEDOR DE LAS OPCIONES (Mover hacia arriba)
+        // 3. PANEL CONTENEDOR DE LAS OPCIONES
         JPanel panelCentro = new JPanel();
-        // ¡CAMBIO CLAVE!: Hemos bajado el margen vertical de 150 a 30. Esto sube los botones inmediatamente.
         panelCentro.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 30)); 
         panelCentro.setOpaque(false);
         
         JPanel panelMenu = new JPanel();
-        // Mantenemos las 5 opciones en 1 columna, bajando a 15px la separación para asegurar espacio
-        panelMenu.setLayout(new GridLayout(5, 1, 0, 15)); 
+        panelMenu.setLayout(new GridLayout(5, 1, 0, 12)); 
         panelMenu.setOpaque(false); 
         
         // 4. CREACIÓN DE BOTONES
         JButton btnNuevaCampana = crearBoton("/img/gemini cartas imagenes/flora.png");
         JButton btnCargar = crearBoton("/img/gemini cartas imagenes/gondalf.png");
         JButton btnOpciones = crearBoton("/img/gemini cartas imagenes/fran.png");
-        JButton btnMultijugador = crearBoton("/img/gemini cartas imagenes/santa claus.png");
+        JButton btnBorrar = crearBoton("/img/gemini cartas imagenes/menu de creacion.png");
         JButton btnSalir = crearBoton("/img/gemini cartas imagenes/terrax.png");
 
-        // --- ASIGNAMOS LA "ETIQUETA SECRETA" (ActionCommand) ---
         btnNuevaCampana.setActionCommand("Nueva Partida");
         btnCargar.setActionCommand("Mostrar Cartas");
-        btnOpciones.setActionCommand("Añadir/Borrar Personaje/Ataque");
-        btnMultijugador.setActionCommand("Cambiar un Ataque o Personaje");
+        btnOpciones.setActionCommand("Añadir");
+        btnBorrar.setActionCommand("Cambiar / Borrar");
         btnSalir.setActionCommand("SALIR");
 
-        // --- AÑADIMOS TU ESCUCHADOR A TODOS LOS BOTONES ---
-        Escuchador miEscuchador = new Escuchador(this); 
+        // --- LA MAGIA ESTÁ AQUÍ ---
+        // 1. Creamos la ventana de creación SIN mostrarla aún
+        VentanaCreacion vc = new VentanaCreacion();
         
+        // 2. Creamos EL ÚNICO escuchador y le pasamos el Menu (this) y la VentanaCreacion (vc)
+        Escuchador miEscuchador = new Escuchador(this, vc);
+        
+        // 3. Añadimos el escuchador a los botones del menú
         btnNuevaCampana.addActionListener(miEscuchador);
         btnCargar.addActionListener(miEscuchador);
         btnOpciones.addActionListener(miEscuchador);
-        btnMultijugador.addActionListener(miEscuchador);
+        btnBorrar.addActionListener(miEscuchador);
         btnSalir.addActionListener(miEscuchador);
+        
+        // 4. LE PASAMOS el escuchador a la ventana de creación para que lo usen sus botones
+        vc.asignarEscuchador(miEscuchador);
+        // ---------------------------
 
-        // Añadimos los botones al panel del menú
         panelMenu.add(btnNuevaCampana);
         panelMenu.add(btnCargar);
         panelMenu.add(btnOpciones);
-        panelMenu.add(btnMultijugador);
+        panelMenu.add(btnBorrar);
         panelMenu.add(btnSalir);
         
-        // Metemos el panel de los botones en el panel central
         panelCentro.add(panelMenu);
-        
-        // Añadimos el panel central al fondo de la ventana
         fondo.add(panelCentro, BorderLayout.CENTER); 
 
-        // 5. PANEL DE CRÉDITOS (Abajo a la derecha)
+        // 5. PANEL DE CRÉDITOS
         JPanel panelCreditos = new JPanel();
         panelCreditos.setLayout(new FlowLayout(FlowLayout.RIGHT)); 
         panelCreditos.setOpaque(false);
@@ -92,24 +90,23 @@ public class Menu extends JFrame {
         this.setSize(1920, 1080); 
         this.setLocationRelativeTo(null); 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setVisible(true);
+        this.setVisible(true); // El menú sí se hace visible al arrancar
     }
 
     public static void main(String[] args) {
-        new Menu("/img/fondo bueno.png");
+        new Menu();
     }
     
-    // Método para crear botones con tamaño estándar
-    private JButton crearBoton(String rutaImagen) {
+    public JButton crearBoton(String rutaImagen) {
         JButton boton = new JButton();
         boton.setHorizontalAlignment(SwingConstants.CENTER);
         
         ImageIcon iconoOriginal = new ImageIcon(getClass().getResource(rutaImagen));
         Image imagen = iconoOriginal.getImage();
-        Image imagenRedimensionada = imagen.getScaledInstance(300, 80, java.awt.Image.SCALE_SMOOTH);
+        Image imagenRedimensionada = imagen.getScaledInstance(300, 100, java.awt.Image.SCALE_SMOOTH);
         boton.setIcon(new ImageIcon(imagenRedimensionada));
         
-        boton.setPreferredSize(new Dimension(300, 80));
+        boton.setPreferredSize(new Dimension(300, 100));
         
         boton.setOpaque(true);
         boton.setBackground(Color.DARK_GRAY);

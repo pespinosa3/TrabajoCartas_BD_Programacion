@@ -6,10 +6,12 @@ import javax.swing.JButton;
 public class Escuchador implements ActionListener {
 
     private Menu v;
+    private VentanaCreacion vc;
     
-    public Escuchador(Menu v) {
+    public Escuchador(Menu v, VentanaCreacion vc) {
         super();
         this.v = v;
+        this.vc=vc;
     }
 
     @Override
@@ -26,18 +28,28 @@ public class Escuchador implements ActionListener {
                 System.out.println("Abriendo partidas guardadas...");
                 break;
                 
-            case "Añadir/Borrar Personaje/Ataque":
+            case "Añadir":
                 System.out.println("Abriendo menú de opciones...");
+                
+                this.v.setVisible(false);
+                this.vc.setVisible(true);
+                
                 break;
                 
-            case "Cambiar un Ataque o Personaje":
+            case "Cambiar / Borrar":
                 System.out.println("Buscando servidores...");
+                
                 break;
                 
             case "SALIR":
                 System.out.println("Saliendo del juego. ¡Hasta pronto!");
                 System.exit(0); 
                 break;
+                
+            case "ATRAS":
+            	this.vc.setVisible(false);
+            	this.v.setVisible(true);
+            	break;
         }
         
         // Comprobación segura por si añades botones con nombre más adelante
