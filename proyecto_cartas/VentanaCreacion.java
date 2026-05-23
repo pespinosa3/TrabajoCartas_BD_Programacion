@@ -1,31 +1,29 @@
 package proyecto_cartas;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.Image;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
+import java.awt.*;
 
 public class VentanaCreacion extends JFrame {
 	
     // Ponemos los botones como atributos para poder acceder a ellos desde el método asignarEscuchador
     private JButton btnAtras;
-    private JButton btnCrear;
+    private JButton btnPersonaje;
+    private JButton btnAtaque;
 	
     public VentanaCreacion() {
 		
         this.setVisible(false); // Nace oculta
         
-        JLabel fondo = new JLabel(new ImageIcon(getClass().getResource("/img/gemini cartas imagenes/fondo princiapal.png")));
+     // 1. EL FONDO (Escalado correctamente a 1920x1080)
+    	ImageIcon iconoFondo = new ImageIcon(getClass().getResource("/img/gemini cartas imagenes/fondo princiapal-clean.png"));
+    	Image imgFondo = iconoFondo.getImage();
+    	// Forzamos a la imagen a medir 1920x1080 con renderizado suave
+    	Image imgFondoRedimensionada = imgFondo.getScaledInstance(1920, 1080, Image.SCALE_SMOOTH);
+        
+        
+        
+        JLabel fondo = new JLabel(new ImageIcon(imgFondoRedimensionada));
+        fondo.setSize(1920,1080);
         fondo.setOpaque(true);
         fondo.setBackground(Color.BLACK); 
         fondo.setLayout(new BorderLayout()); 
@@ -34,9 +32,9 @@ public class VentanaCreacion extends JFrame {
         panelTitulo.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         panelTitulo.setOpaque(false); 
         
-        ImageIcon iconoLogoOriginal = new ImageIcon(getClass().getResource("/img/gemini cartas imagenes/logo.png"));
+        ImageIcon iconoLogoOriginal = new ImageIcon(getClass().getResource("/img/gemini cartas imagenes/menu de creacion.png"));
         Image imgLogo = iconoLogoOriginal.getImage();
-        Image imgLogoRedimensionada = imgLogo.getScaledInstance(600, 200, Image.SCALE_SMOOTH);
+        Image imgLogoRedimensionada = imgLogo.getScaledInstance(210, 210, Image.SCALE_SMOOTH);
         JLabel labelTitulo = new JLabel(new ImageIcon(imgLogoRedimensionada));
         
         panelTitulo.add(labelTitulo);
@@ -47,19 +45,22 @@ public class VentanaCreacion extends JFrame {
         panelCentro.setOpaque(false);
         
         JPanel panelMenu = new JPanel();
-        panelMenu.setLayout(new GridLayout(2, 1, 0, 40)); 
+        panelMenu.setLayout(new GridLayout(1, 3, 50, 40)); 
         panelMenu.setOpaque(false); 
         
-        btnAtras = crearBoton("/img/gemini cartas imagenes/gondalf.png");
-        btnCrear = crearBoton("/img/gemini cartas imagenes/flora.png");
+        btnAtras = crearBoton("/img/gemini cartas imagenes/atras.png");
+        btnPersonaje = crearBoton("/img/gemini cartas imagenes/personaje.png");
+        btnAtaque = crearBoton("/img/gemini cartas imagenes/ataque.png");
 
         btnAtras.setActionCommand("ATRAS");
-        btnCrear.setActionCommand("AÑADIR");
+        btnPersonaje.setActionCommand("personaje");
+        btnAtaque.setActionCommand("ataque");
 
         // NO AÑADIMOS EL ESCUCHADOR AQUÍ. Lo añadiremos con el método de abajo.
         
         panelMenu.add(btnAtras);
-        panelMenu.add(btnCrear);
+        panelMenu.add(btnPersonaje);
+        panelMenu.add(btnAtaque);
         
         panelCentro.add(panelMenu);
         fondo.add(panelCentro, BorderLayout.CENTER); 
@@ -84,7 +85,8 @@ public class VentanaCreacion extends JFrame {
     // Recibe el escuchador que crea Menu.java y se lo pone a los botones
     public void asignarEscuchador(Escuchador esc) {
         btnAtras.addActionListener(esc);
-        btnCrear.addActionListener(esc);
+        btnPersonaje.addActionListener(esc);
+        btnAtaque.addActionListener(esc);
     }
 
     public JButton crearBoton(String rutaImagen) {
@@ -93,15 +95,15 @@ public class VentanaCreacion extends JFrame {
         
         ImageIcon iconoOriginal = new ImageIcon(getClass().getResource(rutaImagen));
         Image imagen = iconoOriginal.getImage();
-        Image imagenRedimensionada = imagen.getScaledInstance(500, 300, java.awt.Image.SCALE_SMOOTH);
+        Image imagenRedimensionada = imagen.getScaledInstance(150, 150, java.awt.Image.SCALE_SMOOTH);
         boton.setIcon(new ImageIcon(imagenRedimensionada));
         
-        boton.setPreferredSize(new Dimension(500, 300));
+        boton.setPreferredSize(new Dimension(150, 150));
         
         boton.setOpaque(true);
         boton.setBackground(Color.DARK_GRAY);
-        boton.setBorderPainted(false); 
-        boton.setFocusPainted(false);
+        //boton.setBorderPainted(false); 
+        //boton.setFocusPainted(false);
         boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         return boton;

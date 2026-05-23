@@ -89,7 +89,7 @@ public class PedirDatos {
 		try {
 			PreparedStatement ps = conexion.prepareStatement(query);
 			
-			System.out.println("¿Que nombre quieres qe tenga?");
+			System.out.println("¿Que nombre quieres que tenga?");
 			ps.setString(1, pedirString(50));
 			
 			System.out.println("Descripcion de tu personaje: ");
@@ -302,9 +302,33 @@ public class PedirDatos {
 				System.out.println("Error en la query...");
 			}
 			
-	}
+		}
 	
-		
+	
+		// Ya no usamos Scanner aquí. Los datos entran directamente por los parámetros.
+	    public static boolean insertarAtaqueGUI(Connection conexion, String nombre, String descripcion, String potencia, int danoBase, int costeMana) {
+	        
+	        String query = "INSERT INTO ataques (nombre, descripcion, potencia, daño_base, coste_mana) VALUES (?,?,?,?,?)";
+	        
+	        try {
+	            PreparedStatement ps = conexion.prepareStatement(query);
+	            
+	            ps.setString(1, nombre);
+	            ps.setString(2, descripcion);
+	            ps.setString(3, potencia);
+	            ps.setInt(4, danoBase);
+	            ps.setInt(5, costeMana);
+	            
+	            int resultado = ps.executeUpdate();
+	            
+	            // Retorna true si se insertó al menos 1 fila
+	            return resultado > 0; 
+	            
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            return false;
+	        }
+	    }
 		
 		
 	

@@ -1,17 +1,23 @@
 package proyecto_cartas;
 
 import java.awt.event.*;
+import java.sql.Connection;
+
 import javax.swing.JButton;
 
 public class Escuchador implements ActionListener {
 
     private Menu v;
     private VentanaCreacion vc;
+    private VentanaAtaques va;
+    private Connection conexionActiva;
     
-    public Escuchador(Menu v, VentanaCreacion vc) {
-        super();
+    // El constructor ahora recibe las tres ventanas
+    public Escuchador(Menu v, VentanaCreacion vc, VentanaAtaques va, Connection conexion) {
         this.v = v;
-        this.vc=vc;
+        this.vc = vc;
+        this.va = va;
+        this.conexionActiva = conexion;
     }
 
     @Override
@@ -28,35 +34,43 @@ public class Escuchador implements ActionListener {
                 System.out.println("Abriendo partidas guardadas...");
                 break;
                 
-            case "Añadir":
+            case "Añadir": // Del Menú a VentanaCreacion
                 System.out.println("Abriendo menú de opciones...");
-                
                 this.v.setVisible(false);
                 this.vc.setVisible(true);
+                break;
                 
+            case "ATRAS": // De VentanaCreacion al Menú
+            	this.vc.setVisible(false);
+            	this.v.setVisible(true);
+            	break;
+
+            case "ataque": // De VentanaCreacion a VentanaAtaques (Pon el actionCommand que tengas en el botón de Crear Ataque)
+                this.vc.setVisible(false); // Ocultamos la de creación
+                this.va.setVisible(true);  // Mostramos la de ataques
+                break;
+                
+            case "Crear Ataque": // El botón de dentro de VentanaAtaques
+                System.out.println("Guardando el ataque en la Base de Datos...");
+                this.va.guardarAtaque(); 
                 break;
                 
             case "Cambiar / Borrar":
                 System.out.println("Buscando servidores...");
-                
                 break;
                 
             case "SALIR":
                 System.out.println("Saliendo del juego. ¡Hasta pronto!");
+                //esto va a hacer que en el main se cumpa la condicion y se pueda cerrar la base de datos
+                Principal.corriendo(false);
+                System.out.println("El juego ya no está corriendo");
                 System.exit(0); 
                 break;
-                
-            case "ATRAS":
-            	this.vc.setVisible(false);
-            	this.v.setVisible(true);
+            case "atras_crear":
+            	System.out.println("Volviendo a la ventana del menu de creación");
+            	this.va.setVisible(false);
+            	this.vc.setVisible(true);
             	break;
-        }
-        
-        // Comprobación segura por si añades botones con nombre más adelante
-        JButton boton = (JButton) e.getSource();
-        if (boton.getName() != null && boton.getName().equalsIgnoreCase("system exit")) {
-            System.out.println("Cerrando la aplicación...");
-            System.exit(0);
         }
     }
 }

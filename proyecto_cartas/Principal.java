@@ -189,19 +189,38 @@ public class Principal {
 		
 		//VentanaCreacion vc = new VentanaCreacion("/img/gemini cartas imagenes/fondo princiapal.png");
 		
-		Menu menu= new Menu();
+		// 2. CREAMOS TODAS LAS VENTANAS (Nacen invisibles por defecto)
+		Menu v = new Menu();
 		VentanaCreacion vc = new VentanaCreacion();
-		Escuchador esc = new Escuchador(menu,vc);
+		VentanaAtaques va = new VentanaAtaques(conexion); // Le pasamos la conexión BBDD
+		
+		// 3. CREAMOS EL ÚNICO ESCUCHADOR (Le pasamos las 3 ventanas para que las controle)
+		Escuchador esc = new Escuchador(v, vc, va, conexion);
+		
+		// 4. REPARTIMOS EL ESCUCHADOR (Le decimos a cada ventana: "Este es el tío que vigila tus botones")
+		v.asignarEscuchador(esc);
+		vc.asignarEscuchador(esc);
+		va.asignarEscuchador(esc);
+		
+		// 5. ¡QUE EMPIECE EL JUEGO! Solo hacemos visible el menú principal
+		v.setVisible(true);
 		
 		
 		System.out.println("\nTerminando conexión a la base de datos...");
 		
-		try {
-			conexion.close();
-		} catch (SQLException e) {
-			
-			e.printStackTrace();
+		if(corriendo(false)) {
+			try {
+				conexion.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
+	
+	//Este metodo lo he tenido que crear para que yo elija cuando se cierra la aplicacion, porque sino se cerraba antes de tiempo ya que entraba al try
+	//catch del cierre de conexion despues de correr las ventanas porque no habia nadie vigilando que la aplicacion seguia corriendo
+	public static boolean corriendo(boolean corriendo) {
+		return corriendo;
+    }
 }

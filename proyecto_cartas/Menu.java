@@ -5,14 +5,27 @@ import java.awt.*;
 
 public class Menu extends JFrame {
 	
+    private JButton btnNuevaPartida;
+    private JButton btnMostrar;
+    private JButton btnMenuCreacion;
+    private JButton btnBorrar;
+    private JButton btnSalir;
+
     public Menu() {
-        // 1. EL FONDO 
-        JLabel fondo = new JLabel(new ImageIcon(getClass().getResource("/img/fondo bueno.png")));
+    	
+    	Principal.corriendo(true);
+    	
+    	// EL FONDO
+    	ImageIcon iconoFondo = new ImageIcon(getClass().getResource("/img/fondo bueno.png"));
+    	Image imgFondo = iconoFondo.getImage();
+    	Image imgFondoRedimensionada = imgFondo.getScaledInstance(1920, 1080, Image.SCALE_SMOOTH);
+    	
+        JLabel fondo = new JLabel(new ImageIcon(imgFondoRedimensionada));
         fondo.setOpaque(true);
         fondo.setBackground(Color.BLACK); 
         fondo.setLayout(new BorderLayout()); 
 
-        // 2. PANEL DEL TÍTULO
+        // PANEL DEL TÍTULO
         JPanel panelTitulo = new JPanel();
         panelTitulo.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         panelTitulo.setOpaque(false); 
@@ -25,56 +38,41 @@ public class Menu extends JFrame {
         panelTitulo.add(labelTitulo);
         fondo.add(panelTitulo, BorderLayout.NORTH); 
 
-        // 3. PANEL CONTENEDOR DE LAS OPCIONES
+        // PANEL CONTENEDOR DE LAS OPCIONES
         JPanel panelCentro = new JPanel();
         panelCentro.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 30)); 
         panelCentro.setOpaque(false);
         
         JPanel panelMenu = new JPanel();
-        panelMenu.setLayout(new GridLayout(5, 1, 0, 12)); 
+        panelMenu.setLayout(new GridLayout(4, 2, 20, 20)); 
         panelMenu.setOpaque(false); 
         
-        // 4. CREACIÓN DE BOTONES
-        JButton btnNuevaCampana = crearBoton("/img/gemini cartas imagenes/flora.png");
-        JButton btnCargar = crearBoton("/img/gemini cartas imagenes/gondalf.png");
-        JButton btnOpciones = crearBoton("/img/gemini cartas imagenes/fran.png");
-        JButton btnBorrar = crearBoton("/img/gemini cartas imagenes/menu de creacion.png");
-        JButton btnSalir = crearBoton("/img/gemini cartas imagenes/terrax.png");
+        // INICIALIZACIÓN DE LOS BOTONES
+        btnNuevaPartida = crearBoton("/img/gemini cartas imagenes/nueva partida.png");
+        btnMostrar = crearBoton("/img/gemini cartas imagenes/mostrar cartas.png");
+        btnMenuCreacion = crearBoton("/img/gemini cartas imagenes/crear.png");
+        btnBorrar = crearBoton("/img/gemini cartas imagenes/eliminar.png");
+        btnSalir = crearBoton("/img/gemini cartas imagenes/salir.png");
 
-        btnNuevaCampana.setActionCommand("Nueva Partida");
-        btnCargar.setActionCommand("Mostrar Cartas");
-        btnOpciones.setActionCommand("Añadir");
+        btnNuevaPartida.setActionCommand("Nueva Partida");
+        btnMostrar.setActionCommand("Mostrar Cartas");
+        btnMenuCreacion.setActionCommand("Añadir");
         btnBorrar.setActionCommand("Cambiar / Borrar");
         btnSalir.setActionCommand("SALIR");
 
-        // --- LA MAGIA ESTÁ AQUÍ ---
-        // 1. Creamos la ventana de creación SIN mostrarla aún
-        VentanaCreacion vc = new VentanaCreacion();
-        
-        // 2. Creamos EL ÚNICO escuchador y le pasamos el Menu (this) y la VentanaCreacion (vc)
-        Escuchador miEscuchador = new Escuchador(this, vc);
-        
-        // 3. Añadimos el escuchador a los botones del menú
-        btnNuevaCampana.addActionListener(miEscuchador);
-        btnCargar.addActionListener(miEscuchador);
-        btnOpciones.addActionListener(miEscuchador);
-        btnBorrar.addActionListener(miEscuchador);
-        btnSalir.addActionListener(miEscuchador);
-        
-        // 4. LE PASAMOS el escuchador a la ventana de creación para que lo usen sus botones
-        vc.asignarEscuchador(miEscuchador);
-        // ---------------------------
+        // ¡ATENCIÓN! AQUÍ YA NO CREAMOS EL ESCUCHADOR NI LA VENTANA CREACIÓN.
+        // Solo añadimos los botones al panel.
 
-        panelMenu.add(btnNuevaCampana);
-        panelMenu.add(btnCargar);
-        panelMenu.add(btnOpciones);
+        panelMenu.add(btnNuevaPartida);
+        panelMenu.add(btnMostrar);
+        panelMenu.add(btnMenuCreacion);
         panelMenu.add(btnBorrar);
         panelMenu.add(btnSalir);
         
         panelCentro.add(panelMenu);
-        fondo.add(panelCentro, BorderLayout.CENTER); 
+        fondo.add(panelCentro, BorderLayout.CENTER);
 
-        // 5. PANEL DE CRÉDITOS
+        // PANEL DE CRÉDITOS
         JPanel panelCreditos = new JPanel();
         panelCreditos.setLayout(new FlowLayout(FlowLayout.RIGHT)); 
         panelCreditos.setOpaque(false);
@@ -85,35 +83,35 @@ public class Menu extends JFrame {
         
         fondo.add(panelCreditos, BorderLayout.SOUTH); 
 
-        // 6. CONFIGURACIÓN DEL MARCO
         this.setContentPane(fondo); 
         this.setSize(1920, 1080); 
         this.setLocationRelativeTo(null); 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setVisible(true); // El menú sí se hace visible al arrancar
+        // Tampoco lo hacemos visible aquí. Lo hará Principal.
     }
 
-    public static void main(String[] args) {
-        new Menu();
+    public void asignarEscuchador(Escuchador esc) {
+        btnNuevaPartida.addActionListener(esc);
+        btnMostrar.addActionListener(esc);
+        btnMenuCreacion.addActionListener(esc);
+        btnBorrar.addActionListener(esc);
+        btnSalir.addActionListener(esc);
     }
-    
+
     public JButton crearBoton(String rutaImagen) {
         JButton boton = new JButton();
         boton.setHorizontalAlignment(SwingConstants.CENTER);
-        
         ImageIcon iconoOriginal = new ImageIcon(getClass().getResource(rutaImagen));
         Image imagen = iconoOriginal.getImage();
-        Image imagenRedimensionada = imagen.getScaledInstance(300, 100, java.awt.Image.SCALE_SMOOTH);
+        Image imagenRedimensionada = imagen.getScaledInstance(160, 160, java.awt.Image.SCALE_SMOOTH);
         boton.setIcon(new ImageIcon(imagenRedimensionada));
-        
-        boton.setPreferredSize(new Dimension(300, 100));
-        
+        boton.setPreferredSize(new Dimension(160, 160));
         boton.setOpaque(true);
-        boton.setBackground(Color.DARK_GRAY);
-        boton.setBorderPainted(false); 
-        boton.setFocusPainted(false);
+        boton.setBackground(Color.BLACK);
+        //boton.setBorderPainted(false); 
+        //boton.setFocusPainted(false);
         boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
         return boton;
     }
+    
 }
