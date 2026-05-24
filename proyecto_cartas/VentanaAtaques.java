@@ -1,16 +1,12 @@
 package proyecto_cartas;
 
 import javax.swing.*;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridLayout;
-import java.awt.Image;
+import java.awt.*;
 import java.sql.Connection;
 
 public class VentanaAtaques extends JFrame {
 	
-    // 1. COMPONENTES COMO ATRIBUTOS (Para que todo el archivo los vea)
+    // 1. COMPONENTES COMO ATRIBUTOS
     private JTextField txtNombre;
     private JTextField txtDescripcion;
     private JComboBox<String> comboPotencia;
@@ -19,104 +15,119 @@ public class VentanaAtaques extends JFrame {
     private Connection conexionActiva;
     
     private JButton botonAtras;
-    
     private JButton btnGuardar;
 
     public VentanaAtaques(Connection conexion) {
     	
-    	this.setVisible(false); // Nace oculta por defecto
+        this.setVisible(false); // Nace oculta por defecto
         this.conexionActiva = conexion;
         
+        // --- 1. CONFIGURACIÓN DEL FONDO (Igual que VentanaCreacion) ---
         ImageIcon iconoFondo = new ImageIcon(getClass().getResource("/img/gemini cartas imagenes/fondo princiapal-clean.png"));
-    	Image imgFondo = iconoFondo.getImage();
-    	Image imgFondoRedimensionada = imgFondo.getScaledInstance(1920, 1080, Image.SCALE_SMOOTH);
+        Image imgFondo = iconoFondo.getImage();
+        Image imgFondoRedimensionada = imgFondo.getScaledInstance(1920, 1080, Image.SCALE_SMOOTH);
         
         JLabel fondo = new JLabel(new ImageIcon(imgFondoRedimensionada));
+        fondo.setSize(1920, 1080);
         fondo.setOpaque(true);
         fondo.setBackground(Color.BLACK);
-        
-        
-        setTitle("Insertar Nuevo Ataque");
-        setSize(1920, 1080);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(null); // Tu diseño absoluto
+        fondo.setLayout(new BorderLayout()); 
 
-        // --- CAMPOS DE TEXTO (Tu código original) ---
-        JLabel lblNombre = new JLabel("Nombre:");
-        lblNombre.setBounds(30, 30, 100, 25);
-        txtNombre = new JTextField();
-        txtNombre.setBounds(150, 30, 200, 25);
-        add(lblNombre); add(txtNombre);
+        // --- 2. PANEL CENTRO (Copiando la estrategia exacta de VentanaCreacion) ---
+        // Usamos FlowLayout con una separación vertical (por ejemplo, 150 píxeles) para bajar el formulario
+        JPanel panelCentro = new JPanel();
+        panelCentro.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 150)); 
+        panelCentro.setOpaque(false);
         
-        fondo.add(lblNombre);
+        // --- 3. PANEL DEL FORMULARIO ---
+        // Un GridLayout de 6 filas (5 de datos + 1 de botones) y 2 columnas
+        JPanel panelFormulario = new JPanel();
+        panelFormulario.setLayout(new GridLayout(6, 2, 20, 25)); 
+        panelFormulario.setOpaque(false);
+        
+        // Fuentes aumentadas para que se lean de forma óptima a 1920x1080
+        Font fuenteEtiquetas = new Font("Arial", Font.BOLD, 24);
+        Font fuenteCampos = new Font("Arial", Font.PLAIN, 20);
 
-        JLabel lblDesc = new JLabel("Descripción:");
-        lblDesc.setBounds(30, 70, 100, 25);
-        txtDescripcion = new JTextField();
-        txtDescripcion.setBounds(150, 70, 200, 25);
-        add(lblDesc); add(txtDescripcion);
+        // Nombre
+        JLabel lblNombre = crearEtiqueta("Nombre:", fuenteEtiquetas);
+        txtNombre = crearCampoTexto(fuenteCampos);
+        panelFormulario.add(lblNombre); panelFormulario.add(txtNombre);
+
+        // Descripción
+        JLabel lblDesc = crearEtiqueta("Descripción:", fuenteEtiquetas);
+        txtDescripcion = crearCampoTexto(fuenteCampos);
+        panelFormulario.add(lblDesc); panelFormulario.add(txtDescripcion);
         
-        fondo.add(lblDesc);
-        
-        JLabel lblPotencia = new JLabel("Potencia:");
-        lblPotencia.setBounds(30, 110, 100, 25);
+        // Potencia
+        JLabel lblPotencia = crearEtiqueta("Potencia:", fuenteEtiquetas);
         String[] opcionesPotencia = {"Ligero", "Normal", "Potente"};
         comboPotencia = new JComboBox<>(opcionesPotencia);
-        comboPotencia.setBounds(150, 110, 200, 25);
-        add(lblPotencia); add(comboPotencia);
+        comboPotencia.setFont(fuenteCampos);
+        panelFormulario.add(lblPotencia); panelFormulario.add(comboPotencia);
         
-        fondo.add(lblPotencia);
-        
-        JLabel lblDano = new JLabel("Daño Base:");
-        lblDano.setBounds(30, 150, 100, 25);
-        txtDano = new JTextField();
-        txtDano.setBounds(150, 150, 200, 25);
-        add(lblDano); add(txtDano);
+        // Daño Base
+        JLabel lblDano = crearEtiqueta("Daño Base:", fuenteEtiquetas);
+        txtDano = crearCampoTexto(fuenteCampos);
+        panelFormulario.add(lblDano); panelFormulario.add(txtDano);
 
-        fondo.add(lblDano);
-        
-        JLabel lblMana = new JLabel("Coste Maná:");
-        lblMana.setBounds(30, 190, 100, 25);
-        txtMana = new JTextField();
-        txtMana.setBounds(150, 190, 200, 25);
-        add(lblMana); add(txtMana);
+        // Coste Maná
+        JLabel lblMana = crearEtiqueta("Coste Maná:", fuenteEtiquetas);
+        txtMana = crearCampoTexto(fuenteCampos);
+        panelFormulario.add(lblMana); panelFormulario.add(txtMana);
 
-        fondo.add(lblMana);
-        
-        JPanel panelBotones = new JPanel();
-        panelBotones.setLayout(new GridLayout(4, 2, 20, 20)); 
-        panelBotones.setOpaque(false);
-        
+        // Botones (Ocupan la última fila del GridLayout automáticamente)
         btnGuardar = new JButton("CREAR ATAQUE");
-        btnGuardar.setBounds(20, 250, 150, 40);
-        
-        //fondo.add(btnGuardar);
+        btnGuardar.setFont(new Font("Arial", Font.BOLD, 18));
+        btnGuardar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
         botonAtras = new JButton("ATRÁS");
-        botonAtras.setBounds(180, 250, 150, 40);
+        botonAtras.setFont(new Font("Arial", Font.BOLD, 18));
+        botonAtras.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        //fondo.add(botonAtras);
+        panelFormulario.add(btnGuardar);
+        panelFormulario.add(botonAtras);
+
+        // --- 4. ENSAMBLAJE JERÁRQUICO ---
+        panelCentro.add(panelFormulario); // Metemos el formulario en el panel con FlowLayout
+        fondo.add(panelCentro, BorderLayout.CENTER); // Metemos todo al centro del fondo
+
+        // --- 5. CONFIGURACIÓN DE LA VENTANA ---
+        setTitle("Insertar Nuevo Ataque");
+        setSize(1920, 1080);
+        setLocationRelativeTo(null); // Centra la ventana en pantalla
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
-        fondo.add(panelBotones);
-        
-        // Le ponemos la "matrícula" al botón para que el Escuchador sepa quién habla
+        // Matrículas para el Escuchador
         btnGuardar.setActionCommand("Crear Ataque"); 
         botonAtras.setActionCommand("atras_crear");
-        
-        add(btnGuardar);
-        add(botonAtras);
         
         this.setContentPane(fondo);
     }
     
-    // 2. EL NUEVO MÉTODO QUE LE FALTABA A ESTA VENTANA
-    // Cuando el Jefe (Principal.java) le pase el escuchador único, se lo enganchamos al botón
+    // --- MÉTODOS AUXILIARES PARA LIMPIAR EL CONSTRUCTOR ---
+    
+    private JLabel crearEtiqueta(String texto, Font fuente) {
+        JLabel label = new JLabel(texto);
+        label.setFont(fuente);
+        label.setForeground(Color.WHITE); // Texto blanco para que resalte sobre el fondo oscuro
+        return label;
+    }
+    
+    private JTextField crearCampoTexto(Font fuente) {
+        JTextField textField = new JTextField();
+        textField.setFont(fuente);
+        textField.setPreferredSize(new Dimension(300, 40)); // Dimensiones base idóneas
+        return textField;
+    }
+
+    // 2. MÉTODO ASIGNAR ESCUCHADOR (Mantenido intacto)
     public void asignarEscuchador(Escuchador esc) {
         btnGuardar.addActionListener(esc);
         botonAtras.addActionListener(esc);
     }
 
-    // 3. TU MÉTODO DE GUARDADO (Ahora público para que el Escuchador pueda ejecutarlo)
+    // 3. MÉTODO DE GUARDADO (Mantenido intacto)
     public void guardarAtaque() {
         try {
             String nombre = txtNombre.getText().trim();
