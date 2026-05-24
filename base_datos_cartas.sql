@@ -290,3 +290,19 @@ INSERT INTO personaje_arma(id_personaje, id_arma) VALUES
 (10,10),
 (11,11),
 (12,12);
+
+UPDATE personajes
+SET descripcion='Ojalá os guste el trabajo'
+WHERE nombre='Pablo';
+
+UPDATE casas
+SET descripcion='Gente de familia'
+WHERE nombre='Lannister';
+
+UPDATE personajes
+SET nombre='Luis'
+WHERE nombre='Aeris';
+
+UPDATE personajes
+SET descripcion='Ten piedad, no he tocado el scripting de Linux todavia'
+WHERE nombre='Luis';
