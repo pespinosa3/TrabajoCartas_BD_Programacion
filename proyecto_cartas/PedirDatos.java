@@ -331,6 +331,33 @@ public class PedirDatos {
 	    }
 		
 		
+	 // Método para la GUI: inserta un personaje recibiendo los parámetros directamente
+	    public static boolean insertarPersonajeGUI(Connection conexion, String nombre, String descripcion, int vida, double multiplicador, int idCasa, int idComandante, int idElemento) {
+	        
+	        String query = "INSERT INTO personajes (nombre, descripcion, vida, multiplicador_ataque, id_casa, id_comandante, id_elemento_1) VALUES (?,?,?,?,?,?,?)";
+	        
+	        try {
+	            PreparedStatement ps = conexion.prepareStatement(query);
+	            
+	            ps.setString(1, nombre);
+	            ps.setString(2, descripcion);
+	            ps.setInt(3, vida);
+	            ps.setDouble(4, multiplicador);
+	            ps.setInt(5, idCasa);
+	            ps.setInt(6, idComandante);
+	            ps.setInt(7, idElemento);
+	            
+	            int resultado = ps.executeUpdate();
+	            
+	            // Retorna true si se insertó con éxito
+	            return resultado > 0;
+	            
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            return false;
+	        }
+	    }
+	    
 	
 		/*PARA EL BUSCADOR GENERAL : SELECT * FROM tabla WHERE nombre = "lo que ha buscado" 
 		 * o SELECT * FROM tabla WHERE nombre LIKE "%termino_de_busqueda%" 

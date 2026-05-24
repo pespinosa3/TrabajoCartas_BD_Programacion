@@ -11,13 +11,15 @@ public class Escuchador implements ActionListener {
     private VentanaCreacion vc;
     private VentanaAtaques va;
     private Connection conexionActiva;
+    private VentanaPersonajes vp;
     
     // El constructor ahora recibe las tres ventanas
-    public Escuchador(Menu v, VentanaCreacion vc, VentanaAtaques va, Connection conexion) {
+    public Escuchador(Menu v, VentanaCreacion vc, VentanaAtaques va, VentanaPersonajes vp , Connection conexion) {
         this.v = v;
         this.vc = vc;
         this.va = va;
         this.conexionActiva = conexion;
+        this.vp=vp;
     }
 
     @Override
@@ -69,8 +71,17 @@ public class Escuchador implements ActionListener {
             case "atras_crear":
             	System.out.println("Volviendo a la ventana del menu de creación");
             	this.va.setVisible(false);
+            	this.vp.setVisible(false);
             	this.vc.setVisible(true);
             	break;
+            case "Crear Personaje":
+                System.out.println("Guardando el personaje en la Base de Datos...");
+                this.vp.guardarPersonaje(); 
+                break;
+            case "personaje": 
+                this.vc.setVisible(false); // Ocultamos la de creación
+                this.vp.setVisible(true);  // Mostramos la de personajes
+                break;
         }
     }
 }

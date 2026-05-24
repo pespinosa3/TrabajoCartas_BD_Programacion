@@ -52,8 +52,8 @@ public class Menu extends JFrame {
         btnMostrar = crearBoton("/img/gemini cartas imagenes/mostrar cartas.png");
         btnMenuCreacion = crearBoton("/img/gemini cartas imagenes/crear.png");
         btnBorrar = crearBoton("/img/gemini cartas imagenes/eliminar.png");
-        btnSalir = crearBoton("/img/gemini cartas imagenes/salir.png");
-
+        btnSalir = crearBoton("/img/gemini cartas imagenes/salir 1.png");
+        
         btnNuevaPartida.setActionCommand("Nueva Partida");
         btnMostrar.setActionCommand("Mostrar Cartas");
         btnMenuCreacion.setActionCommand("Añadir");

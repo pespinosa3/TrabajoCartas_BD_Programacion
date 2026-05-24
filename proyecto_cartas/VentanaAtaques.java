@@ -99,7 +99,7 @@ public class VentanaAtaques extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         // Matrículas para el Escuchador
-        btnGuardar.setActionCommand("Crear Ataque"); 
+        btnGuardar.setActionCommand("Crear Personaje"); 
         botonAtras.setActionCommand("atras_crear");
         
         this.setContentPane(fondo);

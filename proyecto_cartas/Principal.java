@@ -192,10 +192,11 @@ public class Principal {
 		// 2. CREAMOS TODAS LAS VENTANAS (Nacen invisibles por defecto)
 		Menu v = new Menu();
 		VentanaCreacion vc = new VentanaCreacion();
-		VentanaAtaques va = new VentanaAtaques(conexion); // Le pasamos la conexión BBDD
+		VentanaAtaques va = new VentanaAtaques(conexion);
+		VentanaPersonajes vp=new VentanaPersonajes(conexion);
 		
 		// 3. CREAMOS EL ÚNICO ESCUCHADOR (Le pasamos las 3 ventanas para que las controle)
-		Escuchador esc = new Escuchador(v, vc, va, conexion);
+		Escuchador esc = new Escuchador(v, vc, va, vp, conexion);
 		
 		// 4. REPARTIMOS EL ESCUCHADOR (Le decimos a cada ventana: "Este es el tío que vigila tus botones")
 		v.asignarEscuchador(esc);
