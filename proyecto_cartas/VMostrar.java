@@ -3,19 +3,19 @@ package proyecto_cartas;
 import javax.swing.*;
 import java.awt.*;
 
-public class VentanaCreacion extends JFrame {
+public class VMostrar extends JFrame {
 	
     // Ponemos los botones como atributos para poder acceder a ellos desde el método asignarEscuchador
     private JButton btnAtras;
-    private JButton btnPersonaje;
-    private JButton btnAtaque;
+    private JButton btnBuscar;
+    private JButton btnMostrarC;
 	
-    public VentanaCreacion() {
+    public VMostrar() {
 		
         this.setVisible(false); // Nace oculta
         
      // 1. EL FONDO (Escalado correctamente a 1920x1080)
-    	ImageIcon iconoFondo = new ImageIcon(getClass().getResource("/img/gemini cartas imagenes/fondo princiapal-clean.png"));
+    	ImageIcon iconoFondo = new ImageIcon(getClass().getResource("/img/gemini cartas imagenes/buscador.png"));
     	Image imgFondo = iconoFondo.getImage();
     	// Forzamos a la imagen a medir 1920x1080 con renderizado suave
     	Image imgFondoRedimensionada = imgFondo.getScaledInstance(1920, 1080, Image.SCALE_SMOOTH);
@@ -49,18 +49,18 @@ public class VentanaCreacion extends JFrame {
         panelMenu.setOpaque(false); 
         
         btnAtras = crearBoton("/img/gemini cartas imagenes/atras.png");
-        btnPersonaje = crearBoton("/img/gemini cartas imagenes/personaje.png");
-        btnAtaque = crearBoton("/img/gemini cartas imagenes/ataque.png");
+        btnBuscar = crearBoton("/img/gemini cartas imagenes/buscar.png");
+        btnMostrarC = crearBoton("/img/gemini cartas imagenes/mostrar cartas.png");
 
         btnAtras.setActionCommand("ATRAS");
-        btnPersonaje.setActionCommand("personaje");
-        btnAtaque.setActionCommand("ataque");
+        btnBuscar.setActionCommand("buscar");
+        btnMostrarC.setActionCommand("mostrar cartas");
 
         // NO AÑADIMOS EL ESCUCHADOR AQUÍ. Lo añadiremos con el método de abajo.
         
         panelMenu.add(btnAtras);
-        panelMenu.add(btnPersonaje);
-        panelMenu.add(btnAtaque);
+        panelMenu.add(btnBuscar);
+        panelMenu.add(btnMostrarC);
         
         panelCentro.add(panelMenu);
         fondo.add(panelCentro, BorderLayout.CENTER); 
@@ -85,8 +85,8 @@ public class VentanaCreacion extends JFrame {
     // Recibe el escuchador que crea Menu.java y se lo pone a los botones
     public void asignarEscuchador(Escuchador esc) {
         btnAtras.addActionListener(esc);
-        btnPersonaje.addActionListener(esc);
-        btnAtaque.addActionListener(esc);
+        btnBuscar.addActionListener(esc);
+        btnMostrarC.addActionListener(esc);
     }
 
     public JButton crearBoton(String rutaImagen) {

@@ -96,7 +96,7 @@ public class VentanaAtaques extends JFrame {
         setTitle("Insertar Nuevo Ataque");
         setSize(1920, 1080);
         setLocationRelativeTo(null); // Centra la ventana en pantalla
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         // Matrículas para el Escuchador
         btnGuardar.setActionCommand("Crear Personaje"); 

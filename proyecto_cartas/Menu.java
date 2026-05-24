@@ -30,7 +30,7 @@ public class Menu extends JFrame {
         panelTitulo.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         panelTitulo.setOpaque(false); 
         
-        ImageIcon iconoLogoOriginal = new ImageIcon(getClass().getResource("/img/gemini cartas imagenes/logo.png"));
+        ImageIcon iconoLogoOriginal = new ImageIcon(getClass().getResource("/img/gemini cartas imagenes/1logo.png"));
         Image imgLogo = iconoLogoOriginal.getImage();
         Image imgLogoRedimensionada = imgLogo.getScaledInstance(600, 200, Image.SCALE_SMOOTH);
         JLabel labelTitulo = new JLabel(new ImageIcon(imgLogoRedimensionada));

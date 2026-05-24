@@ -296,6 +296,36 @@ public class Consultas {
 	
 	
 	
+	/**
+	 * Método para la GUI: Elimina un dato específico de una tabla.
+	 * Devuelve true si se ha eliminado al menos una fila.
+	 */
+	public static boolean borrarDatoGUI(Connection conexion, String tabla, String columna, String dato) {
+		
+		// Las tablas y columnas se concatenan (JDBC no permite ? para ellas)
+		// El dato sí se pasa como parámetro para evitar errores con comillas y SQL Injection.
+		String query = "DELETE FROM " + tabla + " WHERE " + columna + " = ?";
+		
+		try {
+			PreparedStatement ps = conexion.prepareStatement(query);
+			
+			// Usamos setString. En MySQL, si la columna es INT, esto se convierte automáticamente sin error.
+			ps.setString(1, dato);
+			
+			int resultado = ps.executeUpdate();
+			
+			// Si resultado es mayor que 0, significa que se eliminó al menos 1 fila
+			return resultado > 0;
+			
+		} catch (SQLException e) {
+			System.out.println("Error al intentar borrar el dato en la base de datos.");
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	
+	
 	
 	//buscador: un cursor que recorra cada tabla
 	//no podemos hacer una consulta general porque cada tabla tiene un numero diferente de columnas
@@ -322,7 +352,7 @@ public class Consultas {
 		tablas.add("elementos");
 		tablas.add("ataques");
 		tablas.add("estados");
-		//tablas.add("casas");
+		tablas.add("casas");
 		tablas.add("invocaciones");
 		
 		String query=null;
@@ -355,7 +385,7 @@ public class Consultas {
 		}
 		
 		if(!encontrado) {
-			System.out.println("La consulta:\n"+query+"\nno se encuentra en la base de datos actualmente");
+			System.out.println("No se ha encontrado un elemento con ese nombre en la base de datos");
 		}
 	}
 	

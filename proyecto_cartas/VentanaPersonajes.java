@@ -103,7 +103,7 @@ public class VentanaPersonajes extends JFrame {
         setTitle("Insertar Nuevo Personaje");
         setSize(1920, 1080);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         btnGuardar.setActionCommand("Crear Personaje"); 
         botonAtras.setActionCommand("atras_crear");

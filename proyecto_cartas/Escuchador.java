@@ -12,14 +12,20 @@ public class Escuchador implements ActionListener {
     private VentanaAtaques va;
     private Connection conexionActiva;
     private VentanaPersonajes vp;
+    private VMostrar vm;
+    private VEliminar ve;
+    private VBorrar vb;
     
     // El constructor ahora recibe las tres ventanas
-    public Escuchador(Menu v, VentanaCreacion vc, VentanaAtaques va, VentanaPersonajes vp , Connection conexion) {
+    public Escuchador(Menu v, VentanaCreacion vc, VentanaAtaques va, VentanaPersonajes vp, VMostrar vm, VEliminar ve , Connection conexion, VBorrar vb) {
         this.v = v;
         this.vc = vc;
         this.va = va;
         this.conexionActiva = conexion;
         this.vp=vp;
+        this.vm=vm;
+        this.ve=ve;
+        this.vb=vb;
     }
 
     @Override
@@ -29,21 +35,25 @@ public class Escuchador implements ActionListener {
         
         switch(comando) {
             case "Nueva Partida":
-                System.out.println("Iniciando una nueva campaña...");
+                System.out.println("Nueva Partida iniciada");
                 break;
                 
             case "Mostrar Cartas":
-                System.out.println("Abriendo partidas guardadas...");
+                System.out.println("Entramos a la biblioteca de la sabiduria, donde se guarda toda la informacion del reino");
+                this.vm.setVisible(true);
+                this.v.setVisible(false);
                 break;
                 
             case "Añadir": // Del Menú a VentanaCreacion
-                System.out.println("Abriendo menú de opciones...");
+                System.out.println("Elegiste la opcion de añadir a la base de datos");
                 this.v.setVisible(false);
                 this.vc.setVisible(true);
                 break;
                 
-            case "ATRAS": // De VentanaCreacion al Menú
+            case "ATRAS":
             	this.vc.setVisible(false);
+            	this.vm.setVisible(false);
+            	this.ve.setVisible(false);
             	this.v.setVisible(true);
             	break;
 
@@ -58,14 +68,16 @@ public class Escuchador implements ActionListener {
                 break;
                 
             case "Cambiar / Borrar":
-                System.out.println("Buscando servidores...");
+                System.out.println("Elegiste la opcion de cambiar o borrar un dato");
+                this.v.setVisible(false);
+                this.ve.setVisible(true);
                 break;
                 
             case "SALIR":
-                System.out.println("Saliendo del juego. ¡Hasta pronto!");
+                System.out.println("Saliendo del juego...");
                 //esto va a hacer que en el main se cumpa la condicion y se pueda cerrar la base de datos
                 Principal.corriendo(false);
-                System.out.println("El juego ya no está corriendo");
+                System.out.println("El juego ya no está corriendo.");
                 System.exit(0); 
                 break;
             case "atras_crear":
@@ -82,6 +94,27 @@ public class Escuchador implements ActionListener {
                 this.vc.setVisible(false); // Ocultamos la de creación
                 this.vp.setVisible(true);  // Mostramos la de personajes
                 break;
+            case "atras(eliminar)": // Volver de VentanaBorrarDato a VEliminar
+                this.vb.setVisible(false);
+                this.ve.setVisible(true);
+                break;
+            case "modificar": 
+                this.ve.setVisible(false); // Ocultamos la de creación
+                this.va.setVisible(true);  // Mostramos la de ataques
+                break;
+            case "eliminar":
+                this.ve.setVisible(false); // Ocultamos la de creación
+                this.va.setVisible(true);  // Mostramos la de ataques
+                break;
+            case "atras(borrarDato)": // Volver de VentanaBorrarDato a VEliminar
+                this.vb.setVisible(false);
+                this.ve.setVisible(true);
+                break;
+            case "Eliminar Registro": // El botón "ELIMINAR" dentro de la ventana de borrado
+                System.out.println("Intentando eliminar un registro...");
+                this.vb.ejecutarBorrado();
+                break;
+                
         }
     }
 }

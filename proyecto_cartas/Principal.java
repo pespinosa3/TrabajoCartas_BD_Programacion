@@ -189,26 +189,40 @@ public class Principal {
 		
 		//VentanaCreacion vc = new VentanaCreacion("/img/gemini cartas imagenes/fondo princiapal.png");
 		
+		Consultas.borrarDato(conexion, "ataques", "id", "37");
+		
 		// 2. CREAMOS TODAS LAS VENTANAS (Nacen invisibles por defecto)
+		//creamos un objeto de todas las ventanas, que empezaran en invisible
 		Menu v = new Menu();
 		VentanaCreacion vc = new VentanaCreacion();
 		VentanaAtaques va = new VentanaAtaques(conexion);
 		VentanaPersonajes vp=new VentanaPersonajes(conexion);
+		VMostrar vm=new VMostrar();
+		VEliminar ve=new VEliminar();
+		VBorrar vb=new VBorrar(conexion,"a");
 		
 		// 3. CREAMOS EL ÚNICO ESCUCHADOR (Le pasamos las 3 ventanas para que las controle)
-		Escuchador esc = new Escuchador(v, vc, va, vp, conexion);
+		//creamos un solo escuchador general para todas las ventanas
+		Escuchador esc = new Escuchador(v, vc, va, vp, vm, ve, conexion, vb);
 		
 		// 4. REPARTIMOS EL ESCUCHADOR (Le decimos a cada ventana: "Este es el tío que vigila tus botones")
+		//asignamos el escuchador a todas las ventanas
 		v.asignarEscuchador(esc);
 		vc.asignarEscuchador(esc);
 		va.asignarEscuchador(esc);
+		vp.asignarEscuchador(esc);
+		vm.asignarEscuchador(esc);
+		ve.asignarEscuchador(esc);
+		vb.asignarEscuchador(esc);
 		
 		// 5. ¡QUE EMPIECE EL JUEGO! Solo hacemos visible el menú principal
+		//hacemos visible el menu para que empiece la interfaz
 		v.setVisible(true);
 		
 		
 		System.out.println("\nTerminando conexión a la base de datos...");
 		
+		//comporbacion de si el juego sigue corriendo para poder cerrar la conexion a la base de datos
 		if(corriendo(false)) {
 			try {
 				conexion.close();
