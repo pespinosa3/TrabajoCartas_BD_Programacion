@@ -15,9 +15,11 @@ public class Escuchador implements ActionListener {
     private VMostrar vm;
     private VEliminar ve;
     private VBorrar vb;
+    private VBuscador vbu;
     
     // El constructor ahora recibe las tres ventanas
-    public Escuchador(Menu v, VentanaCreacion vc, VentanaAtaques va, VentanaPersonajes vp, VMostrar vm, VEliminar ve , Connection conexion, VBorrar vb) {
+    public Escuchador(Menu v, VentanaCreacion vc, VentanaAtaques va, VentanaPersonajes vp, VMostrar vm, VEliminar ve , Connection conexion, 
+    		VBorrar vb, VBuscador vbu) {
         this.v = v;
         this.vc = vc;
         this.va = va;
@@ -26,6 +28,7 @@ public class Escuchador implements ActionListener {
         this.vm=vm;
         this.ve=ve;
         this.vb=vb;
+        this.vbu=vbu;
     }
 
     @Override
@@ -99,12 +102,11 @@ public class Escuchador implements ActionListener {
                 this.ve.setVisible(true);
                 break;
             case "modificar": 
-                this.ve.setVisible(false); // Ocultamos la de creación
-                this.va.setVisible(true);  // Mostramos la de ataques
+                System.out.println("Aqui habria para poder modificar un dato");
                 break;
             case "eliminar":
-                this.ve.setVisible(false); // Ocultamos la de creación
-                this.va.setVisible(true);  // Mostramos la de ataques
+                this.ve.setVisible(false); 
+                this.vb.setVisible(true);  // CORRECTO: Debe abrir VBorrar
                 break;
             case "atras(borrarDato)": // Volver de VentanaBorrarDato a VEliminar
                 this.vb.setVisible(false);
@@ -113,6 +115,19 @@ public class Escuchador implements ActionListener {
             case "Eliminar Registro": // El botón "ELIMINAR" dentro de la ventana de borrado
                 System.out.println("Intentando eliminar un registro...");
                 this.vb.ejecutarBorrado();
+                break;
+                
+            case "buscar":
+            	this.vbu.setVisible(true);
+                this.vm.setVisible(false);
+            	break;
+            case "Ejecutar Busqueda": 
+                System.out.println("Buscando...");
+                this.vbu.ejecutarBusqueda();
+                break;
+            case "atras_buscador": // Volver de VentanaBorrarDato a VEliminar
+                this.vbu.setVisible(false);
+                this.vm.setVisible(true);
                 break;
                 
         }

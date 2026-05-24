@@ -95,10 +95,10 @@ public class VEliminar extends JFrame {
         
         ImageIcon iconoOriginal = new ImageIcon(getClass().getResource(rutaImagen));
         Image imagen = iconoOriginal.getImage();
-        Image imagenRedimensionada = imagen.getScaledInstance(150, 150, java.awt.Image.SCALE_SMOOTH);
+        Image imagenRedimensionada = imagen.getScaledInstance(150, 160, java.awt.Image.SCALE_SMOOTH);
         boton.setIcon(new ImageIcon(imagenRedimensionada));
         
-        boton.setPreferredSize(new Dimension(150, 150));
+        boton.setPreferredSize(new Dimension(150, 160));
         
         boton.setOpaque(true);
         boton.setBackground(Color.DARK_GRAY);

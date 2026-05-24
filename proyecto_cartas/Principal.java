@@ -199,11 +199,12 @@ public class Principal {
 		VentanaPersonajes vp=new VentanaPersonajes(conexion);
 		VMostrar vm=new VMostrar();
 		VEliminar ve=new VEliminar();
-		VBorrar vb=new VBorrar(conexion,"a");
+		VBorrar vb=new VBorrar(conexion);
+		VBuscador vbu=new VBuscador(conexion);
 		
 		// 3. CREAMOS EL ÚNICO ESCUCHADOR (Le pasamos las 3 ventanas para que las controle)
 		//creamos un solo escuchador general para todas las ventanas
-		Escuchador esc = new Escuchador(v, vc, va, vp, vm, ve, conexion, vb);
+		Escuchador esc = new Escuchador(v, vc, va, vp, vm, ve, conexion, vb, vbu);
 		
 		// 4. REPARTIMOS EL ESCUCHADOR (Le decimos a cada ventana: "Este es el tío que vigila tus botones")
 		//asignamos el escuchador a todas las ventanas
@@ -214,6 +215,8 @@ public class Principal {
 		vm.asignarEscuchador(esc);
 		ve.asignarEscuchador(esc);
 		vb.asignarEscuchador(esc);
+		vbu.asignarEscuchador(esc);
+		
 		
 		// 5. ¡QUE EMPIECE EL JUEGO! Solo hacemos visible el menú principal
 		//hacemos visible el menu para que empiece la interfaz

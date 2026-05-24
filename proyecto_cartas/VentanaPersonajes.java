@@ -92,8 +92,9 @@ public class VentanaPersonajes extends JFrame {
         botonAtras.setFont(new Font("Arial", Font.BOLD, 18));
         botonAtras.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        panelFormulario.add(btnGuardar);
         panelFormulario.add(botonAtras);
+        panelFormulario.add(btnGuardar);
+        
 
         // --- 4. ENSAMBLAJE JERÁRQUICO ---
         panelCentro.add(panelFormulario); 

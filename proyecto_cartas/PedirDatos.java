@@ -357,21 +357,6 @@ public class PedirDatos {
 	            return false;
 	        }
 	    }
-	    
-	
-		/*PARA EL BUSCADOR GENERAL : SELECT * FROM tabla WHERE nombre = "lo que ha buscado" 
-		 * o SELECT * FROM tabla WHERE nombre LIKE "%termino_de_busqueda%" 
-		 * si devuelve el resultset 0, significa que no hay datos, y por lo tanto puedes pasar a la siguiente tabla, si entra a una tabla, se cumplirá
-		 * una condicion que sea para checkear si ha entrado a algunas de las tablas, si no devuelve nada significa que la variable booleana será false
-		 * y el termino de busqueda (el nombre) no se encuentra en la base de datos.
-		 * Si lo quisieras hacer de descripciones tambien, se complicaria, porque harian falta otra consulta mas para cada tabla, O
-		 * puedes hacer un cursor doble en el que recoge varibles de cada campo (nombre, descripcion) y luego revisa si está en cada tabla. El problema sería
-		 * la consulta del cursor todo el rato, pero en verdad ibas a hacer lo mismo en java. o tambien, aun mejor, una variable global
-		 * en mysql que vaya cambiando de dato conforme recorra una de las tablas, y asi se puede reutilizar el procedimiento del cursor, en el que se introduzca
-		 * el nombre de la varible, ostia noooo, solo necesitas un parametro de entrada con el IN y le cambias el nombre  a la tabla conforme las recorras. Porque
-		 * tablas nuevas no vas a crear.
-		 * 
-		 */
 	
 	
 }

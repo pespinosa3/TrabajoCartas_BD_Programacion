@@ -44,7 +44,7 @@ public class Menu extends JFrame {
         panelCentro.setOpaque(false);
         
         JPanel panelMenu = new JPanel();
-        panelMenu.setLayout(new GridLayout(4, 2, 20, 20)); 
+        panelMenu.setLayout(new GridLayout(2, 2, 40, 40));
         panelMenu.setOpaque(false); 
         
         // INICIALIZACIÓN DE LOS BOTONES
@@ -63,11 +63,12 @@ public class Menu extends JFrame {
         // ¡ATENCIÓN! AQUÍ YA NO CREAMOS EL ESCUCHADOR NI LA VENTANA CREACIÓN.
         // Solo añadimos los botones al panel.
 
-        panelMenu.add(btnNuevaPartida);
-        panelMenu.add(btnMostrar);
+        //panelMenu.add(btnNuevaPartida);
         panelMenu.add(btnMenuCreacion);
-        panelMenu.add(btnBorrar);
+        panelMenu.add(btnMostrar);
         panelMenu.add(btnSalir);
+        panelMenu.add(btnBorrar);
+        
         
         panelCentro.add(panelMenu);
         fondo.add(panelCentro, BorderLayout.CENTER);
@@ -103,9 +104,9 @@ public class Menu extends JFrame {
         boton.setHorizontalAlignment(SwingConstants.CENTER);
         ImageIcon iconoOriginal = new ImageIcon(getClass().getResource(rutaImagen));
         Image imagen = iconoOriginal.getImage();
-        Image imagenRedimensionada = imagen.getScaledInstance(160, 160, java.awt.Image.SCALE_SMOOTH);
+        Image imagenRedimensionada = imagen.getScaledInstance(160, 180, java.awt.Image.SCALE_SMOOTH);
         boton.setIcon(new ImageIcon(imagenRedimensionada));
-        boton.setPreferredSize(new Dimension(160, 160));
+        boton.setPreferredSize(new Dimension(160, 180));
         boton.setOpaque(true);
         boton.setBackground(Color.BLACK);
         //boton.setBorderPainted(false); 
