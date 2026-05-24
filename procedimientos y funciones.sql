@@ -146,6 +146,10 @@ DELETE FROM ataques WHERE nombre="aaaa";
 
 
 SELECT MAX(id_ataque) FROM ataques;
+
+SELECT * FROM ataques where id_ataque IN (SELECT MAX(id_ataque) FROM ataques);
+
+
 -- haz una FUNCION PARA que te devuelva el daño critico PORQUE ASI LO PUEDES AÑADIR DIRECTAMENTE A LA BASE DE DATOS CON UN SELECT QUE ERA LO QE TU QUERIAS
 -- por parametro el id del ataque y te devuelve el daño critico calculado
 
@@ -182,3 +186,7 @@ DELIMITER ;
 CALL buscador('personajes','Pablo');
 
 SELECT * FROM personajes;
+
+SELECT * FROM ataques;
+
+-- ALTER TABLE
