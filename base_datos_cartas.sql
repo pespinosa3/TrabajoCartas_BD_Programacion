@@ -2,9 +2,7 @@ DROP DATABASE IF EXISTS Juego_cartas;
 CREATE DATABASE Juego_cartas;
 USE Juego_cartas;
 
--- ==========================================
--- 1. ESTADOS
--- ==========================================
+
 CREATE TABLE estados (
     id_estado INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
@@ -18,11 +16,7 @@ INSERT INTO estados (nombre, descripcion, turnos) VALUES
 ('Mojado','Duchita fria para empezar el dia',1), ('Moderado','Has sido banneano',3);
 
 
--- ==========================================
--- 2. ELEMENTOS
--- ==========================================
 
--- 1. Tabla Elementos (Sin cambios, solo para referencia de FK)
 CREATE TABLE elementos (
     id_elemento INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
@@ -38,20 +32,17 @@ INSERT INTO elementos (nombre, descripcion) VALUES
 ('Líquido', 'Fluidos.'),
 ('Admin', 'Más vale que siga las reglas');
 
--- 2. Tabla Personajes (Con las dos nuevas columnas de elementos)
 
-
--- 1. Creamos la tabla de Casas primero
 CREATE TABLE casas (
     id_casa INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     emblema VARCHAR(50),
     descripcion VARCHAR(150),
-    id_comandante INT, -- Aquí guardaremos el ID del capitán
+    id_comandante INT, 
     dicho VARCHAR(100)
 );
 
--- 2. Insertamos las casas (dejamos el ID de comandante listo)
+
 INSERT INTO casas (nombre, emblema, descripcion, id_comandante, dicho) VALUES
 ('Legión Administrativa', 'Martillo Dorado', 'Obedece la normativa o serás expulsado' , 11, 'Sigue la normativa, está subida en #general'), -- Pablo
 ('Orden del Caos', 'Dementor', 'Orden abisal', 12, 'EL invierno está cerca'),      -- Jaime
@@ -66,9 +57,9 @@ CREATE TABLE personajes (
     vida INT,
     multiplicador_ataque DECIMAL(3,2),
     id_casa INT,
-    id_comandante INT, -- Relación reflexiva
-    id_elemento_1 INT, -- Primer elemento (Obligatorio por lógica de juego)
-    id_elemento_2 INT, -- Segundo elemento (Opcional, puede ser NULL)
+    id_comandante INT,
+    id_elemento_1 INT,
+    id_elemento_2 INT, 
     
     FOREIGN KEY (id_casa) REFERENCES casas(id_casa) ON DELETE CASCADE,
     FOREIGN KEY (id_comandante) REFERENCES personajes(id_personaje) ON DELETE CASCADE,
@@ -76,31 +67,27 @@ CREATE TABLE personajes (
     FOREIGN KEY (id_elemento_2) REFERENCES elementos(id_elemento) ON DELETE CASCADE
 );
 
--- 3. Inserción de Personajes
--- Respetamos el orden: Capitanes primero para evitar errores de clave foránea
+-- Capitanes primero para evitar errores de forin ki
 INSERT INTO personajes (id_personaje, nombre, descripcion, vida, multiplicador_ataque, id_casa, id_comandante, id_elemento_1, id_elemento_2) VALUES
--- CAPITANES
-(11, 'Pablo','moderador de las tierras sagradas', 500, 2.00, 1, NULL, 7, NULL),     -- Admin
-(12, 'Jaime','moderador de las tierras oscuras', 5000, 1.00, 2, NULL, 7, NULL),    -- Admin
-(2, 'Bolt el perro ese','el perro de la pelicula esa (no se como se llama)', 700, 1.40, 3, NULL, 2, 3), -- Eléctrico + Solar
-(4, 'Hydra','la del dark souls 1', 1100, 1.00, 4, NULL, 6, 4),        -- Líquido + Planta
+-- Dictadores
+(11, 'Pablo','moderador de las tierras sagradas', 500, 2.00, 1, NULL, 7, NULL),
+(12, 'Jaime','moderador de las tierras oscuras', 5000, 1.00, 2, NULL, 7, NULL),
+(2, 'Bolt el perro ese','el perro de la pelicula esa (no se como se llama)', 700, 1.40, 3, NULL, 2, 3),
+(4, 'Hydra','la del dark souls 1', 1100, 1.00, 4, NULL, 6, 4),
 
--- SOLDADOS (Asociados a sus capitanes y elementos)
-(1, 'Aeris','ninfa del bosque', 900, 1.20, 1, 11, 1, 3),           -- Vacío + Solar
-(3, 'Terrax','golem de roca', 1400, 0.85, 1, 11, 5, NULL),      -- Mineral
-(5, 'Flora','flower power', 800, 1.30, 2, 12, 4, NULL),        -- Planta
-(6, 'Fran','leñador experto, ha perfeccionado el uso del hacha', 600, 1.50, 2, 12, 1, NULL),        -- Vacío
-(7, 'Mary Angel','Te controla la excepción', 950, 1.15, 3, 2, 3, NULL),         -- Solar
-(8, 'Santa Claus','Te va a traer carbón que te has portado como el culo', 1200, 0.95, 3, 2, 6, 5),     -- Líquido + Mineral
-(9, 'Pikacho','Primo agresivo, drogadicto de pikachu', 750, 1.35, 4, 4, 2, NULL),       -- Electricidad
-(10, 'Gondalf','Gandalf si fuera gitano', 650, 1.45, 4, 4, 1, 4);        -- Vacío + Planta
-
-
+-- Esclavos
+(1, 'Aeris','ninfa del bosque', 900, 1.20, 1, 11, 1, 3),
+(3, 'Terrax','golem de roca', 1400, 0.85, 1, 11, 5, NULL),
+(5, 'Flora','flower power', 800, 1.30, 2, 12, 4, NULL),
+(6, 'Fran','leñador experto, ha perfeccionado el uso del hacha', 600, 1.50, 2, 12, 1, NULL),
+(7, 'Mary Angel','Te controla la excepción', 950, 1.15, 3, 2, 3, NULL),
+(8, 'Santa Claus','Te va a traer carbón que te has portado como el culo', 1200, 0.95, 3, 2, 6, 5),
+(9, 'Pikacho','Primo agresivo, drogadicto de pikachu', 750, 1.35, 4, 4, 2, NULL),
+(10, 'Gondalf','Gandalf si fuera gitano', 650, 1.45, 4, 4, 1, 4);
 
 
--- ==========================================
--- 6. ATAQUES (Limpia)
--- ==========================================
+
+
 CREATE TABLE ataques (
     id_ataque INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
@@ -148,11 +135,12 @@ INSERT INTO ataques (nombre, descripcion, potencia, daño_base, coste_mana) VALU
 ('Terror de las Tinieblas', 'Huye de ahí', 'normal', 70, 6),
 ('Decapitar', 'Se acabó', 'potente', 300, 12);
 
--- ==========================================
--- 7. TABLAS RELACIONALES (ATAQUES)
--- ==========================================
 
--- esto es para no tener que añadirle a la tabla de personaje el id de sus tres ataques y que se quede mas limpia y bonita
+
+-- esto es para no tener que añadirle a la tabla de personaje el id de sus tres ataques
+/* los dos son primary key porque si te creas un personaje nuevo le tienes que poder añadir un ataque, entonces un ataque puede aparecer varias veces
+en la tabla, y id_personaje tiene que salir mas de una vez si queremos que tengan 3 ataques cada personaje, y primary key tienen que ser para no 
+repetirse la combinacion*/
 CREATE TABLE ataque_personaje (
     id_ataque INT,
     id_personaje INT,
@@ -167,7 +155,7 @@ INSERT INTO ataque_personaje (id_ataque, id_personaje) VALUES
 (25,9), (26,9), (27,9), (28,10), (29,10), (30,10), (31,11), (32,11), (33,11), (34,12), (35,12), (36,12);
 
 
--- otra tabla relacional separada, de nuevo para que aparezcan mas limpias en aspecto, por funcinalidad realmente no es necesario
+-- otra tabla relacional separada, de nuevo para que sea mas facil acceder a los datos, por funcinalidad realmente no es necesario
 CREATE TABLE ataque_elemento (
     id_ataque INT,
     id_elemento INT,
